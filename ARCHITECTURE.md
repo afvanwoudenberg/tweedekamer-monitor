@@ -13,7 +13,7 @@ The project has two goals:
 
 ### Audiences and Design Goals
 
-The main audience is the general public. Journalists, researchers, and data scientists are important secondary audiences. They can clone the repository and use Databricks or another Spark environment to work directly with the Silver and Gold layers.
+The main audience is the general public. Journalists, researchers, and data scientists are important secondary audiences. They can clone or fork the repository and use Databricks or another Spark environment to work directly with the Silver and Gold layers.
 
 The architecture prioritizes:
 
@@ -26,13 +26,13 @@ The architecture prioritizes:
 
 ### System Overview
 
-The pipeline periodically reads the SyncFeed 2.0 XML API, processes the data in Databricks Free Edition with Delta Lake, and publishes the Gold data as Parquet files. The Streamlit dashboard runs from this repository on Streamlit Community Cloud and queries those files through DuckDB.
+The pipeline periodically reads the [Tweede Kamer Open Data](https://opendata.tweedekamer.nl/) API, processes the data in Databricks (Free Edition), and publishes the Gold data as Parquet files. The Streamlit dashboard runs from this repository on Streamlit Community Cloud and queries those files through DuckDB.
 
 ```mermaid
 flowchart LR
     API["🏛️ Tweede Kamer Open Data API"]
     
-    subgraph DB["Databricks Free Edition"]
+    subgraph DB["Databricks"]
         direction LR
         B[("🥉 Bronze\nraw source data")]
         S[("🥈 Silver\nclean and conformed data")]
@@ -58,7 +58,7 @@ flowchart LR
     ANALYST -. "uses" .-> DB
 ```
 
-The transformation and hosting environments are separate on purpose. Databricks handles data engineering and modeling, GitHub Releases distributes the files, and DuckDB queries them inside the dashboard process.
+The transformation and hosting environments are separate on purpose. Databricks handles data engineering and modeling, GitHub Releases distributes the files, and DuckDB queries them inside the Streamlit dashboard app.
 
 ### Data Layers
 
@@ -68,23 +68,29 @@ The pipeline follows the [Medallion Architecture](https://docs.databricks.com/en
 - **Silver** cleans and conforms the data for analytical use.
 - **Gold** organizes the data for dashboard and reporting queries.
 
-The layers describe responsibilities in the data process, not separate dashboard views. The dashboard mainly uses Gold, while analysts may also use Silver. Each layer documents its contents, source, and required quality checks.
+The layers describe responsibilities in the data process, not separate dashboard views. The dashboard mainly uses Gold, while analysts may also use Silver.
 
 ### Source and Ingestion
 
-The source is the public Tweede Kamer Open Data API at `opendata.tweedekamer.nl`, accessed through its SyncFeed 2.0 XML interface. The ingestion logic lives in [`pipeline/bronze/ingest_opendata.py`](pipeline/bronze/ingest_opendata.py) and runs periodically for the relevant API categories. A skiptoken ensures that only new items are ingested.
+The source is the public [Tweede Kamer Open Data](https://opendata.tweedekamer.nl/) API, accessed through its SyncFeed 2.0 XML interface. The ingestion logic lives in [`pipeline/bronze/ingest_opendata.py`](pipeline/bronze/ingest_opendata.py). A skiptoken ensures that only new items are ingested.
 
-Raw source records are stored in the `workspace.tweedekamer.bronze_opendata_api` Delta table after [`pipeline/init.sql`](pipeline/init.sql) prepares the catalog and schema. The Bronze contract keeps the raw `entry`, the source position (`skiptoken`), and the ingestion timestamp (`ingested_at`).
+Raw source records are stored in the `workspace.tweedekamer.bronze_opendata_api` table. 
 
 Any future external sources must also enter through Bronze. Their original data and source metadata should remain there before the data is cleaned, combined, or transformed in Silver and Gold.
 
 Ingestion should respect the public API with bounded requests, suitable retries, and a schedule that does not create unnecessary load. Failures must be visible and must not silently produce an incomplete refresh.
 
+### Transformation
+
+The SQL that transforms raw data in the Bronze layer to clean tables in the Silver layer lives in [`pipeline/silver/`](/pipeline/silver/) folder. The SQL that creates the Gold dimensional schema is found in [`pipeline/gold/`](/pipeline/gold/). For each table in either layer there is a seperate `.sql` file that takes care of this.
+
+Both the ingestion logic and SQL code is called from the [`pipeline/run_pipeline.py`](/pipeline/run_pipeline.py) script. This script is run periodically to keep data up to date.
+
 ### Publication
 
-Parquet is the exchange format between the pipeline and the dashboard. Gold tables are exported as Parquet files, published through GitHub Releases, and queried by the dashboard with DuckDB.
+Parquet is the exchange format between the pipeline and the dashboard. Gold tables are exported as Parquet files, published through GitHub Releases, and queried by the Streamlit dashboard using DuckDB.
 
-Each release replaces the previous assets, so historical dataset versioning is outside the scope of this architecture. A small manifest should record the refresh time, source coverage, row counts, schema, and data-quality result.
+Each release replaces the previous assets. 
 
 This arrangement provides several benefits:
 
@@ -94,15 +100,14 @@ This arrangement provides several benefits:
 - GitHub Releases provide public distribution without requiring a database server.
 - Databricks and the dashboard can be operated independently.
 - DuckDB can run expressive SQL over Parquet inside the Streamlit process.
-- Release metadata makes it possible to diagnose what the dashboard displayed.
 
-The release process should publish complete, consistent assets, and the dashboard should never mix files from different refreshes. Downloading to a temporary location and replacing the local dataset atomically helps prevent partial refreshes from being queried.
+The release process should publish complete, consistent assets, and the dashboard should never mix files from different refreshes. 
 
 ### Dashboard
 
 #### Hosting and Caching
 
-The Streamlit dashboard is deployed from this repository on [Streamlit Community Cloud](https://streamlit.io/cloud). It should use caching because Streamlit reruns the script when users interact with widgets. Otherwise, each interaction could recreate DuckDB connections, download the same files, and repeat identical queries.
+The Streamlit dashboard is deployed from this repository on [Streamlit Community Cloud](https://streamlit.io/cloud). It should use caching because Streamlit reruns the script when users interact with widgets. Otherwise, each interaction could recreate DuckDB connections, download the same data, and repeat identical queries.
 
 #### Public Usability
 
@@ -119,7 +124,7 @@ The dashboard should work for people who are unfamiliar with the Tweede Kamer. E
 - Use accessible color choices, sufficient contrast, and alternatives to color-only distinctions.
 - Avoid presenting correlations or counts as causal explanations.
 
-The dashboard is a public explanation layer, not the only way to analyze the data. Users who need more detail or repeatability can clone the repository and work with Silver and Gold in SQL, Python, or R notebooks.
+The dashboard is a public explanation layer, not the only way to analyze the data. Users who need more detail or repeatability can clone or fork the repository and work with Silver and Gold in SQL, Python, or R notebooks.
 
 ## Standards
 
@@ -141,9 +146,7 @@ The pipeline and analytical models follow these conventions:
 
 Silver merges should use durable source identifiers, defined merge keys, and idempotent update rules. Gold uses a star schema with documented fact-table grains and dimensions for descriptive context. Silver should be usable directly in SQL, Python, or R; Gold is recalculated and published on each refresh.
 
-Every Silver and Gold table and column must have a Dutch comment. It should describe the business meaning, provenance, units where relevant, nullability or expected values, and transformation semantics. These comments are part of the data contract: they document the data for users and maintainers and help the LLM agent in Databricks build accurate queries.
-
-The standards apply to the overall layer structure and data contracts; the architecture does not prescribe an exhaustive inventory of independent tables.
+Every Silver and Gold table and column must have a Dutch description added to it using the SQL keyword COMMENT. It should describe things such as its meaning, provenance, units where relevant, nullability or expected values, and transformation semantics. These comments are part of the data contract: they document the data for users and maintainers and help the LLM agent in Databricks build accurate queries.
 
 ## Operations
 
@@ -176,4 +179,3 @@ Databricks Free Edition is the initial processing environment. The design avoids
 - **Stemming**: a vote.
 - **Vergadering**: a parliamentary meeting or sitting.
 - **Commissie**: a parliamentary committee.
-- **Bronze, Silver, Gold**: progressively refined data layers in the Medallion Architecture.
