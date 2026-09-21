@@ -216,3 +216,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# dbt local metadata
+pipeline/transform/.user.yml
+tweedekamer.duckdb

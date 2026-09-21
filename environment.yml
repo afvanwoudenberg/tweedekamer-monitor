@@ -1,0 +1,14 @@
+name: tweedekamer_monitor
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - pip
+  - pip:
+    - dlt[duckdb]
+    - duckdb
+    - dbt-duckdb
+    - requests
+    - xmlschema
+    - lxml
+    - streamlit

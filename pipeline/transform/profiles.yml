@@ -1,0 +1,7 @@
+tweedekamer_transform:
+  target: local
+  outputs:
+    local:
+      type: duckdb
+      path: "{{ env_var('DUCKDB_PATH') }}"
+      threads: 1

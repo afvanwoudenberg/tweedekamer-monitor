@@ -11,9 +11,9 @@ The project has two goals:
 
 ## Architecture
 
-### Audiences and Design Goals
+### Intended Users and Design Goals
 
-The main audience is the general public. Journalists, researchers, and data scientists are important secondary audiences. They can clone or fork the repository and use Databricks or another Spark environment to work directly with the Silver and Gold layers.
+The primary intended users are members of the general public. Journalists, researchers, and data scientists are important secondary users who can clone or fork the repository and work directly with cleaned data using data analysis tools like Python/R notebooks, SQL or Power BI.
 
 The architecture prioritizes:
 
@@ -26,17 +26,17 @@ The architecture prioritizes:
 
 ### System Overview
 
-The pipeline periodically reads the [Tweede Kamer Open Data](https://opendata.tweedekamer.nl/) API, processes the data in Databricks (Free Edition), and publishes the Gold data as Parquet files. The Streamlit dashboard runs from this repository on Streamlit Community Cloud and queries those files through DuckDB.
+The pipeline periodically reads the [Tweede Kamer Open Data](https://opendata.tweedekamer.nl/) API using **dlt** (data load tool) into a local **DuckDB** database (`bronze` layer). Transformations from Bronze to Silver and Gold are managed with **dbt** (dbt-duckdb). The Gold data is published as Parquet files. The Streamlit dashboard runs from this repository on Streamlit Community Cloud and queries those files through DuckDB.
 
 ```mermaid
 flowchart LR
     API["🏛️ Tweede Kamer Open Data API"]
     
-    subgraph DB["Databricks"]
+    subgraph LocalEngine["DuckDB + dlt + dbt"]
         direction LR
-        B[("🥉 Bronze\nraw source data")]
-        S[("🥈 Silver\nclean and conformed data")]
-        G[("🥇 Gold\nstar schema")]
+        B[("🥉 Bronze\nraw feed via dlt")]
+        S[("🥈 Silver\nclean models via dbt")]
+        G[("🥇 Gold\nstar schema via dbt")]
         
         B --> S --> G
     end
@@ -55,26 +55,22 @@ flowchart LR
     
     %% The user is placed to the left of the dashboard
     USER -. "uses" .-> SC
-    ANALYST -. "uses" .-> DB
+    ANALYST -. "uses" .-> LocalEngine
 ```
-
-The transformation and hosting environments are separate on purpose. Databricks handles data engineering and modeling, GitHub Releases distributes the files, and DuckDB queries them inside the Streamlit dashboard app.
 
 ### Data Layers
 
 The pipeline follows the [Medallion Architecture](https://docs.databricks.com/en/lakehouse/medallion.html):
 
-- **Bronze** stores source data with minimal interpretation.
-- **Silver** cleans and conforms the data for analytical use.
+- **Bronze** stores raw source feed data ingested by `dlt` in DuckDB with automatic incremental `skiptoken` tracking and XSD schema validation. Entries are dynamically routed to dedicated bronze tables per entity type (`bronze.verslag`, `bronze.persoon`, `bronze.vergadering`, etc.).
+- **Silver** cleans and conforms the data for analytical use via `dbt`.
 - **Gold** organizes the data for dashboard and reporting queries.
-
-The layers describe responsibilities in the data process, not separate dashboard views. The dashboard mainly uses Gold, while analysts may also use Silver.
 
 ### Source and Ingestion
 
-The source is the public [Tweede Kamer Open Data](https://opendata.tweedekamer.nl/) API, accessed through its SyncFeed 2.0 XML interface. The ingestion logic lives in [`pipeline/bronze/ingest_opendata.py`](pipeline/bronze/ingest_opendata.py). A skiptoken ensures that only new items are ingested.
+The source is the public [Tweede Kamer Open Data](https://opendata.tweedekamer.nl/) API, accessed through its SyncFeed 2.0 XML interface. The ingestion logic lives in [`pipeline/ingest/opendata.py`](pipeline/ingest/opendata.py). A skiptoken managed automatically by `dlt`'s incremental state ensures that only new items are ingested.
 
-Raw source records are stored in the `workspace.tweedekamer.bronze_opendata_api` table. 
+Raw source records are validated against XSD schemas and dynamically dispatched to dedicated `bronze.<entity>` tables in DuckDB.
 
 Any future external sources must also enter through Bronze. Their original data and source metadata should remain there before the data is cleaned, combined, or transformed in Silver and Gold.
 
@@ -82,9 +78,9 @@ Ingestion should respect the public API with bounded requests, suitable retries,
 
 ### Transformation
 
-The SQL that transforms raw data in the Bronze layer to clean tables in the Silver layer lives in [`pipeline/silver/`](/pipeline/silver/) folder. The SQL that creates the Gold dimensional schema is found in [`pipeline/gold/`](/pipeline/gold/). For each table in either layer there is a seperate `.sql` file that takes care of this.
+The dbt project that transforms raw data in the Bronze layer to clean Silver and Gold tables lives in [`pipeline/transform/`](pipeline/transform/). Models for each table belong in its `models/` folder.
 
-Both the ingestion logic and SQL code is called from the [`pipeline/run_pipeline.py`](/pipeline/run_pipeline.py) script. This script is run periodically to keep data up to date.
+The [`pipeline/run_pipeline.py`](pipeline/run_pipeline.py) script runs all ingestion sources and then the dbt transformation project. It is run periodically to keep data up to date.
 
 ### Publication
 
@@ -96,9 +92,9 @@ This arrangement provides several benefits:
 
 - Parquet is compact and columnar, so it works well for analytical scans.
 - Column pruning and compression limit the data read by dashboard queries.
-- The files work across Python, R, SQL engines, Spark, and local data tools.
+- The files work across Python, R, SQL engines, and local data tools.
 - GitHub Releases provide public distribution without requiring a database server.
-- Databricks and the dashboard can be operated independently.
+- The pipeline and the dashboard can be run independently.
 - DuckDB can run expressive SQL over Parquet inside the Streamlit process.
 
 The release process should publish complete, consistent assets, and the dashboard should never mix files from different refreshes. 
@@ -115,7 +111,7 @@ The dashboard should work for people who are unfamiliar with the Tweede Kamer. E
 
 - Explain terms such as *motie*, *wetsvoorstel*, *stemming*, *fractie*, *commissie*, and *vergadering* in plain language.
 - Explain the basic path from proposal to debate, vote, and decision where relevant.
-- Use clear labels, descriptive chart titles, units, legends, and source references.
+- Use clear labels, descriptive chart titles, units, and legends.
 - Provide sensible defaults and allow users to start exploring without configuring many controls.
 - Use progressive disclosure so advanced detail is available without overwhelming first-time users.
 - Handle empty results, loading, stale data, and failures with useful messages.
@@ -124,7 +120,7 @@ The dashboard should work for people who are unfamiliar with the Tweede Kamer. E
 - Use accessible color choices, sufficient contrast, and alternatives to color-only distinctions.
 - Avoid presenting correlations or counts as causal explanations.
 
-The dashboard is a public explanation layer, not the only way to analyze the data. Users who need more detail or repeatability can clone or fork the repository and work with Silver and Gold in SQL, Python, or R notebooks.
+The dashboard is a public explanation layer, not the only way to analyze the data. Users who need more detail or repeatability can clone or fork the repository and work with Silver and Gold tables in SQL, Python, or R notebooks.
 
 ## Standards
 
@@ -139,14 +135,14 @@ The pipeline and analytical models follow these conventions:
 - Use consistent types for dates, timestamps, booleans, numeric measures, and text.
 - Define the grain of every fact and the intended cardinality of important relationships.
 - Keep transformation logic deterministic and idempotent where possible.
-- Prefer portable SQL, Python, standard Spark DataFrame APIs, and open file formats.
+- Prefer portable SQL, Python, and open file formats.
 - Write all SQL keywords in uppercase, such as `SELECT`, `FROM`, `WHERE`, `JOIN`, and `GROUP BY`. Table names, column names, and other identifiers follow the lowercase Dutch naming convention above.
 
 ### Data Contracts
 
 Silver merges should use durable source identifiers, defined merge keys, and idempotent update rules. Gold uses a star schema with documented fact-table grains and dimensions for descriptive context. Silver should be usable directly in SQL, Python, or R; Gold is recalculated and published on each refresh.
 
-Every Silver and Gold table and column must have a Dutch description added to it using the SQL keyword COMMENT. It should describe things such as its meaning, provenance, units where relevant, nullability or expected values, and transformation semantics. These comments are part of the data contract: they document the data for users and maintainers and help the LLM agent in Databricks build accurate queries.
+Every Silver and Gold table and column must have a Dutch description added to it. It should describe things such as its meaning, provenance, units where relevant, nullability or expected values, and transformation semantics. These comments are part of the data contract: they document the data for users and maintainers and help LLM agents build accurate queries.
 
 ## Operations
 
@@ -162,13 +158,11 @@ Operations should include:
 - Handling and reporting of malformed or unexpected source data.
 - Explicit schema-evolution decisions when the API changes.
 - Logging of refresh start, completion, row counts, failures, and publication results.
-- Safe configuration of endpoints and runtime settings.
 - No credentials or secrets committed to the repository.
-- Appropriate access controls for Databricks workspaces and publishing credentials.
 
-### Portability and Security
+### Portability
 
-Databricks Free Edition is the initial processing environment. The design avoids Databricks-specific Spark features such as declarative pipelines. Transformations should use portable Spark DataFrame APIs, standard SQL, Python, and open formats so the workload can move to another platform or a fully open-source stack with limited redesign.
+The pipeline prioritizes open-source tools, including **DuckDB** for analytical storage, **dlt** for ingestion, and **dbt** for transformations. The dashboard is built using **Streamlit**. Using open-source tools, portable SQL, and open formats helps keep the workload reproducible and portable across environments.
 
 ## Glossary
 
