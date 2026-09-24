@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: bronze
+    schema: bronze
+    description: >
+      Ruwe brondata zoals ingelezen door dlt vanuit de SyncFeed 2.0 XML-feed van
+      de Tweede Kamer Open Data API. Elke tabel bevat één rij per keer dat de bron
+      een entiteit heeft aangemaakt of gewijzigd; er is nog geen deduplicatie of
+      opschoning toegepast.
+    tables:
+      - name: persoon
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort Persoon (een persoon als actor
+          binnen het parlementaire proces).
+      - name: persoon__atom_links
+        description: >
+          Door dlt automatisch afgesplitste Atom-links per Persoon-feedrij, o.a.
+          'enclosure' (downloadlink van de portretfoto) en 'next' (paginering van
+          de feed).
+      - name: persoon_contactinformatie
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort PersoonContactinformatie, met de
+          verwijzing naar de bijbehorende Persoon.

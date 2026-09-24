@@ -5,3 +5,4 @@ tweedekamer_transform:
       type: duckdb
       path: "{{ env_var('DUCKDB_PATH') }}"
       threads: 1
+      schema: main

@@ -5,7 +5,17 @@ config-version: 2
 profile: tweedekamer_transform
 
 model-paths: [models]
+macro-paths: [macros]
 target-path: target
 clean-targets:
   - target
   - dbt_packages
+
+models:
+  tweedekamer_transform:
+    silver:
+      +materialized: incremental
+      +schema: silver
+      +persist_docs:
+        relation: true
+        columns: true

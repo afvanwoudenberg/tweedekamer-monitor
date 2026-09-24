@@ -1,0 +1,191 @@
+version: 2
+
+models:
+  - name: persoon
+    description: >
+      Actuele, ontdubbelde momentopname van elke Persoon (een persoon als actor
+      binnen het parlementaire proces).
+    constraints:
+      - type: primary_key
+        columns: [id]
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Persoon.
+        data_tests:
+          - unique
+          - not_null
+      - name: nummer
+        data_type: VARCHAR
+        description: Intern identificatienummer van een Persoon.
+      - name: titels
+        data_type: VARCHAR
+        description: Titels van een Persoon.
+      - name: initialen
+        data_type: VARCHAR
+        description: Initialen van een Persoon.
+      - name: tussenvoegsel
+        data_type: VARCHAR
+        description: Tussenvoegsel van een Persoon.
+      - name: achternaam
+        data_type: VARCHAR
+        description: Achternaam van een Persoon.
+      - name: voornamen
+        data_type: VARCHAR
+        description: Voornamen van een Persoon.
+      - name: roepnaam
+        data_type: VARCHAR
+        description: Roepnaam van een Persoon.
+      - name: geslacht
+        data_type: VARCHAR
+        description: Geslacht van een Persoon.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["man", "vrouw", "x"]
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een Persoon.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Eerste Kamerlid", "Oud Kamerlid", "Tweede Kamerlid"]
+      - name: geboortedatum
+        data_type: DATE
+        description: >
+          Geboortedatum van een Persoon. Wanneer de bron geen volledige datum
+          levert, is deze aangevuld tot een geldige datum (ontbrekende maand/dag
+          op 1 gezet) — zie geboortedatum_precisie voor de werkelijke nauwkeurigheid
+          en geboortedatum_ruw voor de oorspronkelijke brontekst.
+      - name: geboortedatum_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van geboortedatum, zoals aangeleverd door de bron.
+      - name: geboortedatum_precisie
+        data_type: VARCHAR
+        description: >
+          Nauwkeurigheid van geboortedatum: dag (volledige datum), maand, jaar,
+          week of week_dag (ISO-weeknummer; datum bij weekprecisie is bij benadering).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: geboorteplaats
+        data_type: VARCHAR
+        description: Geboorteplaats van een Persoon.
+      - name: geboorteland
+        data_type: VARCHAR
+        description: Geboorteland van een Persoon.
+      - name: overlijdensdatum
+        data_type: DATE
+        description: >
+          Overlijdensdatum van een Persoon. Wanneer de bron geen volledige datum
+          levert, is deze aangevuld tot een geldige datum (ontbrekende maand/dag
+          op 1 gezet) — zie overlijdensdatum_precisie voor de werkelijke nauwkeurigheid
+          en overlijdensdatum_ruw voor de oorspronkelijke brontekst.
+      - name: overlijdensdatum_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van overlijdensdatum, zoals aangeleverd door de bron.
+      - name: overlijdensdatum_precisie
+        data_type: VARCHAR
+        description: >
+          Nauwkeurigheid van overlijdensdatum: dag (volledige datum), maand, jaar,
+          week of week_dag (ISO-weeknummer; datum bij weekprecisie is bij benadering).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: overlijdensplaats
+        data_type: VARCHAR
+        description: Overlijdensplaats van een Persoon.
+      - name: woonplaats
+        data_type: VARCHAR
+        description: Woonplaats van een Persoon.
+      - name: land
+        data_type: VARCHAR
+        description: Land waar een Persoon verblijft.
+      - name: fractielabel
+        data_type: VARCHAR
+        description: >
+          Fractie waartoe een Persoon behoort. Wordt alleen gevuld als functie =
+          'Eerste Kamerlid'.
+      - name: portret_url
+        data_type: VARCHAR
+        description: >
+          Downloadlink naar de portretfoto van een Persoon, afgeleid van de
+          'enclosure'-link in de Atom-feed. Samen met content_type en
+          content_length te gebruiken om het bestand op te halen.
+      - name: content_type
+        data_type: VARCHAR
+        description: Bestandsformaat van de portretfoto van een Persoon.
+      - name: content_length
+        data_type: INTEGER
+        description: Bestandsgrootte (in bytes) van de portretfoto van een Persoon.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een Persoon heeft aangemaakt of
+          aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een Persoon
+          zichtbaar is geworden in het Gegevensmagazijn. Gebruikt als hoogwatermerk
+          voor de incrementele verwerking van deze tabel.
+        data_tests:
+          - not_null
+
+  - name: persoon_contactinformatie
+    description: >
+      Actuele, ontdubbelde contactinformatie van personen. Per contactgegeven
+      wordt alleen de meest recent gewijzigde versie bewaard; verwijderde
+      contactgegevens worden niet opgenomen.
+    constraints:
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een PersoonContactinformatie.
+        data_tests:
+          - unique
+          - not_null
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: soort
+        data_type: VARCHAR
+        description: >
+          Soort PersoonContactinformatie. Waarden die in de bron zijn aangetroffen
+          zijn E-mail, Facebook, Instagram, LinkedIn, Twitter, Website, X en Bluesky.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["E-mail", "Facebook", "Instagram", "LinkedIn", "Twitter", "Website", "X", "Bluesky"]
+      - name: waarde
+        data_type: VARCHAR
+        description: Waarde van een PersoonContactinformatie.
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een PersoonContactinformatie in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een PersoonContactinformatie heeft
+          aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          PersoonContactinformatie zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
