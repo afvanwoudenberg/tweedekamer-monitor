@@ -142,6 +142,8 @@ models:
       wordt alleen de meest recent gewijzigde versie bewaard; verwijderde
       contactgegevens worden niet opgenomen.
     constraints:
+      - type: primary_key
+        columns: [id]
       - type: foreign_key
         columns: [persoon_id]
         expression: silver.persoon (id)
@@ -187,5 +189,1338 @@ models:
         description: >
           Datum en tijd waarop de toevoeging of laatste wijziging van een
           PersoonContactinformatie zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: persoon_geschenk
+    description: >
+      Actuele, ontdubbelde geschenken die door personen zijn ontvangen en
+      geregistreerd. Per geschenk wordt alleen de meest recent gewijzigde versie
+      bewaard; verwijderde geschenken worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een PersoonGeschenk.
+        data_tests:
+          - unique
+          - not_null
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: omschrijving
+        data_type: VARCHAR
+        description: Omschrijving van een PersoonGeschenk.
+      - name: datum
+        data_type: DATE
+        description: >
+          Datum waarop een PersoonGeschenk is ontvangen of geregistreerd. Bij een
+          gedeeltelijke bronwaarde zijn ontbrekende onderdelen op 1 gezet; zie
+          datum_precisie voor de werkelijke nauwkeurigheid.
+      - name: datum_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de datum van een PersoonGeschenk.
+      - name: datum_precisie
+        data_type: VARCHAR
+        description: >
+          Nauwkeurigheid van datum: dag (volledige datum), maand, jaar, week of
+          week_dag. Bij weekprecisie is de afgeleide datum bij benadering.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een PersoonGeschenk in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een PersoonGeschenk heeft
+          aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          PersoonGeschenk zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: persoon_loopbaan
+    description: >
+      Actuele, ontdubbelde loopbaanonderdelen van personen. Per loopbaanonderdeel
+      wordt alleen de meest recent gewijzigde versie bewaard; verwijderde
+      loopbaanonderdelen worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een PersoonLoopbaan.
+        data_tests:
+          - unique
+          - not_null
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: functie
+        data_type: VARCHAR
+        description: Functie behorende bij een PersoonLoopbaan.
+      - name: werkgever
+        data_type: VARCHAR
+        description: Werkgever van een PersoonLoopbaan.
+      - name: omschrijving_nl
+        data_type: VARCHAR
+        description: Nederlandse omschrijving van een PersoonLoopbaan.
+      - name: omschrijving_en
+        data_type: VARCHAR
+        description: Engelse omschrijving van een PersoonLoopbaan.
+      - name: plaats
+        data_type: VARCHAR
+        description: Plaats van een PersoonLoopbaan.
+      - name: van
+        data_type: DATE
+        description: >
+          Startdatum van een PersoonLoopbaan. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de startdatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de startdatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een PersoonLoopbaan. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende maand/dag ingevuld met de laatste dag van de maand of
+          31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een PersoonLoopbaan in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een PersoonLoopbaan heeft
+          aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          PersoonLoopbaan zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: persoon_nevenfunctie
+    description: >
+      Actuele, ontdubbelde nevenfuncties van personen. Per nevenfunctie wordt
+      alleen de meest recent gewijzigde versie bewaard; verwijderde nevenfuncties
+      worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een PersoonNevenfunctie.
+        data_tests:
+          - unique
+          - not_null
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: omschrijving
+        data_type: VARCHAR
+        description: Omschrijving van een PersoonNevenfunctie.
+      - name: is_actief
+        data_type: BOOLEAN
+        description: Geeft aan of een PersoonNevenfunctie momenteel wordt bekleed.
+      - name: periode_van
+        data_type: DATE
+        description: >
+          Startdatum van een PersoonNevenfunctie. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende onderdelen op 1 gezet; zie periode_van_precisie.
+      - name: periode_van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de startdatum.
+      - name: periode_van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de startdatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: periode_tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een PersoonNevenfunctie. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende maand/dag ingevuld met de laatste dag van de maand of
+          31 december; zie periode_tot_en_met_precisie.
+      - name: periode_tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: periode_tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: vergoeding_soort
+        data_type: VARCHAR
+        description: Soort vergoeding voor een PersoonNevenfunctie.
+      - name: vergoeding_toelichting
+        data_type: VARCHAR
+        description: Toelichting op de soort vergoeding voor een PersoonNevenfunctie.
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een PersoonNevenfunctie in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een PersoonNevenfunctie heeft
+          aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          PersoonNevenfunctie zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: persoon_nevenfunctie_inkomsten
+    description: >
+      Actuele, ontdubbelde inkomsten behorende bij PersoonNevenfuncties. Alleen
+      inkomsten waarvan de bijbehorende PersoonNevenfunctie in de silverlaag
+      aanwezig is worden opgenomen; verwijderde of verweesde records worden
+      uitgesloten.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [persoon_nevenfunctie_id]
+        expression: silver.persoon_nevenfunctie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een PersoonNevenfunctieInkomsten.
+        data_tests:
+          - unique
+          - not_null
+      - name: persoon_nevenfunctie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende PersoonNevenfunctie.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon_nevenfunctie')
+                field: id
+      - name: jaar
+        data_type: INTEGER
+        description: Jaar van een PersoonNevenfunctieInkomsten.
+      - name: bedrag_soort
+        data_type: VARCHAR
+        description: Soort bedrag, bijvoorbeeld Bruto, Netto of Onbekend.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Bruto", "Netto", "Onbekend"]
+      - name: bedrag_voorvoegsel
+        data_type: VARCHAR
+        description: Voorvoegsel van het bedrag.
+      - name: bedrag_valuta
+        data_type: VARCHAR
+        description: Valuta van het bedrag.
+      - name: bedrag
+        data_type: DECIMAL(18,2)
+        description: Bedrag behorende bij een PersoonNevenfunctieInkomsten.
+      - name: bedrag_achtervoegsel
+        data_type: VARCHAR
+        description: Achtervoegsel van het bedrag.
+      - name: frequentie
+        data_type: VARCHAR
+        description: Frequentie van de inkomsten.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["Eenmalig", "Per dag", "Per jaar", "Per maand", "Vrije invoer"]
+      - name: frequentie_beschrijving
+        data_type: VARCHAR
+        description: Notitie gemaakt bij de frequentie van de inkomsten.
+      - name: opmerking
+        data_type: VARCHAR
+        description: Notitie gemaakt bij de inkomsten.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een PersoonNevenfunctieInkomsten
+          heeft aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van inkomsten
+          zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: persoon_onderwijs
+    description: >
+      Actuele, ontdubbelde onderwijsgegevens van personen. Per onderwijsgegeven
+      wordt alleen de meest recent gewijzigde versie bewaard; verwijderde
+      onderwijsgegevens worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een PersoonOnderwijs.
+        data_tests:
+          - unique
+          - not_null
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: opleiding_nl
+        data_type: VARCHAR
+        description: Nederlandse naam van een PersoonOnderwijs.
+      - name: opleiding_en
+        data_type: VARCHAR
+        description: Engelse naam van een PersoonOnderwijs.
+      - name: instelling
+        data_type: VARCHAR
+        description: Instelling waar een PersoonOnderwijs is genoten.
+      - name: plaats
+        data_type: VARCHAR
+        description: Plaats waar de instelling van een PersoonOnderwijs is gevestigd.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een PersoonOnderwijs. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een PersoonOnderwijs. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende maand/dag ingevuld met de laatste dag van de maand of
+          31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een PersoonOnderwijs in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een PersoonOnderwijs heeft
+          aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          PersoonOnderwijs zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: persoon_reis
+    description: >
+      Actuele, ontdubbelde reizen van personen. Per reis wordt alleen de meest
+      recent gewijzigde versie bewaard; verwijderde reizen worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een PersoonReis.
+        data_tests:
+          - unique
+          - not_null
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: doel
+        data_type: VARCHAR
+        description: Doel van een PersoonReis.
+      - name: bestemming
+        data_type: VARCHAR
+        description: Bestemming van een PersoonReis.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een PersoonReis. Bij een gedeeltelijke bronwaarde zijn
+          ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een PersoonReis. Bij een gedeeltelijke bronwaarde zijn
+          ontbrekende maand/dag ingevuld met de laatste dag van de maand of
+          31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: betaald_door
+        data_type: VARCHAR
+        description: Betaler van een PersoonReis.
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een PersoonReis in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een PersoonReis heeft aangemaakt
+          of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          PersoonReis zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: zaal
+    description: >
+      Actuele, ontdubbelde zalen in het gebouw van de Tweede Kamer en incidentele
+      externe locaties. Verwijderde zalen worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Zaal.
+        data_tests:
+          - unique
+          - not_null
+      - name: naam
+        data_type: VARCHAR
+        description: Naam van een Zaal.
+      - name: sys_code
+        data_type: INTEGER
+        description: Intern identificatienummer van een Zaal.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop in het bronsysteem een Zaal is aangemaakt of
+          aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een Zaal
+          zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: fractie
+    description: >
+      Actuele, ontdubbelde fracties als actoren binnen het parlementaire proces.
+      Verwijderde fracties worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Fractie.
+        data_tests:
+          - unique
+          - not_null
+      - name: nummer
+        data_type: VARCHAR
+        description: Intern identificatienummer van een Fractie.
+      - name: afkorting
+        data_type: VARCHAR
+        description: Afkorting van een Fractie.
+      - name: naam_nl
+        data_type: VARCHAR
+        description: Nederlandse naam van een Fractie.
+      - name: naam_en
+        data_type: VARCHAR
+        description: Engelse naam van een Fractie.
+      - name: aantal_zetels
+        data_type: INTEGER
+        description: Aantal zetels van een Fractie.
+      - name: aantal_stemmen
+        data_type: INTEGER
+        description: Aantal stemmen dat een Fractie heeft behaald bij de laatste verkiezingen.
+      - name: datum_actief
+        data_type: DATE
+        description: >
+          Begindatum van een Fractie. Bij een gedeeltelijke bronwaarde zijn
+          ontbrekende onderdelen op 1 gezet; zie datum_actief_precisie.
+      - name: datum_actief_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de actieve datum.
+      - name: datum_actief_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de actieve datum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: datum_inactief
+        data_type: DATE
+        description: >
+          Einddatum van een Fractie. Bij een gedeeltelijke bronwaarde zijn
+          ontbrekende maand/dag ingevuld met de laatste dag van de maand of
+          31 december; zie datum_inactief_precisie.
+      - name: datum_inactief_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de inactieve datum.
+      - name: datum_inactief_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de inactieve datum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: logo_url
+        data_type: VARCHAR
+        description: Downloadlink naar het logo van een Fractie uit de Atom-feed.
+      - name: content_type
+        data_type: VARCHAR
+        description: Bestandsformaat van het logo van een Fractie.
+      - name: content_length
+        data_type: INTEGER
+        description: Bestandsgrootte (in bytes) van het logo van een Fractie.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een Fractie heeft aangemaakt of
+          aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een Fractie
+          zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: fractie_zetel
+    description: >
+      Actuele, ontdubbelde zetels van fracties. Verwijderde zetels en zetels
+      zonder een actieve bijbehorende Fractie worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [fractie_id]
+        expression: silver.fractie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een FractieZetel.
+        data_tests:
+          - unique
+          - not_null
+      - name: fractie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Fractie.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fractie')
+                field: id
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een FractieZetel in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een FractieZetel heeft aangemaakt
+          of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          FractieZetel zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: fractie_zetel_persoon
+    description: >
+      Actuele, ontdubbelde personen die een FractieZetel bezetten. Verwijderde
+      records en records zonder actieve FractieZetel of Persoon worden niet
+      opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [fractie_zetel_id]
+        expression: silver.fractie_zetel (id)
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een FractieZetelPersoon.
+        data_tests:
+          - unique
+          - not_null
+      - name: fractie_zetel_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende FractieZetel.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fractie_zetel')
+                field: id
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een FractieZetelPersoon, bijvoorbeeld Fractievoorzitter of Lid.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een FractieZetelPersoon. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een FractieZetelPersoon. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende maand/dag ingevuld met de laatste dag van de maand of
+          31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een FractieZetelPersoon heeft
+          aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          FractieZetelPersoon zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: fractie_zetel_vacature
+    description: >
+      Actuele, ontdubbelde vacatures voor FractieZetels. Verwijderde vacatures
+      en vacatures zonder actieve FractieZetel worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [fractie_zetel_id]
+        expression: silver.fractie_zetel (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een FractieZetelVacature.
+        data_tests:
+          - unique
+          - not_null
+      - name: fractie_zetel_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende FractieZetel.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fractie_zetel')
+                field: id
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een FractieZetelVacature.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een FractieZetelVacature. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een FractieZetelVacature. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende maand/dag ingevuld met de laatste dag van
+          de maand of 31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een FractieZetelVacature heeft
+          aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          FractieZetelVacature zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: commissie
+    description: >
+      Actuele, ontdubbelde commissies als actoren binnen het parlementaire
+      proces. Verwijderde commissies worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Commissie.
+        data_tests:
+          - unique
+          - not_null
+      - name: nummer
+        data_type: VARCHAR
+        description: Intern identificatienummer van een Commissie.
+      - name: soort
+        data_type: VARCHAR
+        description: Soort Commissie.
+      - name: afkorting
+        data_type: VARCHAR
+        description: Afkorting van een Commissie.
+      - name: naam_nl
+        data_type: VARCHAR
+        description: Nederlandse naam van een Commissie.
+      - name: naam_en
+        data_type: VARCHAR
+        description: Engelse naam van een Commissie.
+      - name: naam_web_nl
+        data_type: VARCHAR
+        description: Nederlandse naam van een Commissie voor op het web.
+      - name: naam_web_en
+        data_type: VARCHAR
+        description: Engelse naam van een Commissie voor op het web.
+      - name: inhoudsopgave
+        data_type: VARCHAR
+        description: Inhoudsopgavecategorie van een Commissie.
+      - name: datum_actief
+        data_type: DATE
+        description: >
+          Datum dat een Commissie is gestart. Bij een gedeeltelijke bronwaarde
+          zijn ontbrekende onderdelen op 1 gezet; zie datum_actief_precisie.
+      - name: datum_actief_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de actieve datum.
+      - name: datum_actief_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de actieve datum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: datum_inactief
+        data_type: DATE
+        description: >
+          Datum dat een Commissie decharge is verleend. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende maand/dag ingevuld met de laatste dag van
+          de maand of 31 december; zie datum_inactief_precisie.
+      - name: datum_inactief_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de inactieve datum.
+      - name: datum_inactief_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de inactieve datum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een Commissie heeft aangemaakt
+          of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          Commissie zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: commissie_contactinformatie
+    description: >
+      Actuele, ontdubbelde contactinformatie van commissies. Verwijderde records
+      en records zonder een actieve bijbehorende Commissie worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [commissie_id]
+        expression: silver.commissie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een CommissieContactinformatie.
+        data_tests:
+          - unique
+          - not_null
+      - name: commissie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Commissie.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('commissie')
+                field: id
+      - name: soort
+        data_type: VARCHAR
+        description: Soort CommissieContactinformatie.
+      - name: waarde
+        data_type: VARCHAR
+        description: Waarde van een CommissieContactinformatie.
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een CommissieContactinformatie in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een CommissieContactinformatie
+          heeft aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          CommissieContactinformatie zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: commissie_zetel
+    description: >
+      Actuele, ontdubbelde zetels van commissies. Verwijderde zetels en zetels
+      zonder een actieve bijbehorende Commissie worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [commissie_id]
+        expression: silver.commissie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een CommissieZetel.
+        data_tests:
+          - unique
+          - not_null
+      - name: commissie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Commissie.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('commissie')
+                field: id
+      - name: gewicht
+        data_type: INTEGER
+        description: Waarde om de positie van een CommissieZetel in een lijst te bepalen.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een CommissieZetel heeft aangemaakt
+          of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          CommissieZetel zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: commissie_zetel_vast_persoon
+    description: >
+      Actuele, ontdubbelde personen die een CommissieZetel vast bezetten.
+      Verwijderde records en records zonder actieve CommissieZetel of Persoon
+      worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [commissie_zetel_id]
+        expression: silver.commissie_zetel (id)
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een CommissieZetelVastPersoon.
+        data_tests:
+          - unique
+          - not_null
+      - name: commissie_zetel_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende CommissieZetel.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('commissie_zetel')
+                field: id
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een CommissieZetelVastPersoon.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een CommissieZetelVastPersoon. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een CommissieZetelVastPersoon. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende maand/dag ingevuld met de laatste dag van
+          de maand of 31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een CommissieZetelVastPersoon
+          heeft aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          CommissieZetelVastPersoon zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: commissie_zetel_vast_vacature
+    description: >
+      Actuele, ontdubbelde vacatures voor vaste CommissieZetels. Verwijderde
+      records zonder actieve CommissieZetel of Fractie worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [commissie_zetel_id]
+        expression: silver.commissie_zetel (id)
+      - type: foreign_key
+        columns: [fractie_id]
+        expression: silver.fractie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een CommissieZetelVastVacature.
+        data_tests:
+          - unique
+          - not_null
+      - name: commissie_zetel_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende CommissieZetel.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('commissie_zetel')
+                field: id
+      - name: fractie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Fractie.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fractie')
+                field: id
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een CommissieZetelVastVacature.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een CommissieZetelVastVacature. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een CommissieZetelVastVacature. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende maand/dag ingevuld met de laatste dag van
+          de maand of 31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een CommissieZetelVastVacature
+          heeft aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          CommissieZetelVastVacature zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: commissie_zetel_vervanger_persoon
+    description: >
+      Actuele, ontdubbelde personen die een CommissieZetel als plaatsvervangend
+      lid bezetten. Verwijderde records en records zonder actieve CommissieZetel
+      of Persoon worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [commissie_zetel_id]
+        expression: silver.commissie_zetel (id)
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een CommissieZetelVervangerPersoon.
+        data_tests:
+          - unique
+          - not_null
+      - name: commissie_zetel_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende CommissieZetel.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('commissie_zetel')
+                field: id
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('persoon')
+                field: id
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een CommissieZetelVervangerPersoon.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een CommissieZetelVervangerPersoon. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een CommissieZetelVervangerPersoon. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende maand/dag ingevuld met de laatste dag van
+          de maand of 31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een CommissieZetelVervangerPersoon
+          heeft aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          CommissieZetelVervangerPersoon zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: commissie_zetel_vervanger_vacature
+    description: >
+      Actuele, ontdubbelde vacatures voor plaatsvervangende CommissieZetels.
+      Verwijderde records zonder actieve CommissieZetel of Fractie worden niet
+      opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [commissie_zetel_id]
+        expression: silver.commissie_zetel (id)
+      - type: foreign_key
+        columns: [fractie_id]
+        expression: silver.fractie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een CommissieZetelVervangerVacature.
+        data_tests:
+          - unique
+          - not_null
+      - name: commissie_zetel_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende CommissieZetel.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('commissie_zetel')
+                field: id
+      - name: fractie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Fractie.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('fractie')
+                field: id
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een CommissieZetelVervangerVacature.
+      - name: van
+        data_type: DATE
+        description: >
+          Begindatum van een CommissieZetelVervangerVacature. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende onderdelen op 1 gezet; zie van_precisie.
+      - name: van_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de begindatum.
+      - name: van_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de begindatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: tot_en_met
+        data_type: DATE
+        description: >
+          Einddatum van een CommissieZetelVervangerVacature. Bij een gedeeltelijke
+          bronwaarde zijn ontbrekende maand/dag ingevuld met de laatste dag van
+          de maand of 31 december; zie tot_en_met_precisie.
+      - name: tot_en_met_ruw
+        data_type: VARCHAR
+        description: Oorspronkelijke brontekst van de einddatum.
+      - name: tot_en_met_precisie
+        data_type: VARCHAR
+        description: Nauwkeurigheid van de einddatum.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["dag", "maand", "jaar", "week", "week_dag"]
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een CommissieZetelVervangerVacature
+          heeft aangemaakt of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          CommissieZetelVervangerVacature zichtbaar is geworden in het Gegevensmagazijn.
         data_tests:
           - not_null

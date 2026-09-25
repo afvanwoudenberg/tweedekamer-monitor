@@ -1,5 +1,5 @@
 -- Generate a Mermaid ERD containing full column information from all tables in the silver layer
--- Usage: duckdb tweedekamer.duckdb -noheader -list < utils/full_erd_silver.sql
+-- Usage: duckdb tweedekamer.duckdb -noheader -list < utils/erd_silver_full.sql | wl-copy
 
 WITH column_meta AS (
     -- Fetch columns, primary/foreign key status, and column comments from DuckDB catalog
@@ -92,18 +92,29 @@ cardinality_check AS (
         fk.parent_table,
         fk.fk_columns,
         CASE 
-            WHEN uc.constraint_type IN ('PRIMARY KEY', 'UNIQUE') 
-                 AND COUNT(DISTINCT ukcu.column_name) = fk.fk_col_count 
+            WHEN uc.constraint_name IS NOT NULL
             THEN '||--||' 
             ELSE '||--o{' 
         END AS relationship_operator
     FROM fk_constraints fk
-    LEFT JOIN information_schema.key_column_usage ukcu
-        ON fk.child_table = ukcu.table_name
-    LEFT JOIN information_schema.table_constraints uc
-        ON ukcu.constraint_name = uc.constraint_name 
-       AND uc.constraint_type IN ('PRIMARY KEY', 'UNIQUE')
-    GROUP BY fk.constraint_name, fk.child_table, fk.parent_table, fk.fk_columns, fk.fk_col_count, uc.constraint_type
+    LEFT JOIN (
+        SELECT
+            tc.table_name,
+            tc.constraint_name,
+            string_agg(kcu.column_name, ', ' ORDER BY kcu.ordinal_position) AS key_columns,
+            COUNT(*) AS key_col_count
+        FROM information_schema.table_constraints tc
+        JOIN information_schema.key_column_usage kcu
+            ON tc.constraint_name = kcu.constraint_name
+           AND tc.table_schema = kcu.table_schema
+        WHERE tc.table_schema = 'silver'
+          AND tc.constraint_type IN ('PRIMARY KEY', 'UNIQUE')
+        GROUP BY tc.table_name, tc.constraint_name
+    ) uc
+        ON fk.child_table = uc.table_name
+       AND fk.fk_columns = uc.key_columns
+       AND fk.fk_col_count = uc.key_col_count
+    GROUP BY fk.constraint_name, fk.child_table, fk.parent_table, fk.fk_columns, uc.constraint_name
 )
 -- Aggregate diagram elements into final Mermaid erDiagram
 SELECT 

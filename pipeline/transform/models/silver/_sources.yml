@@ -22,3 +22,73 @@ sources:
         description: >
           Ruwe feed-rijen voor de entiteitsoort PersoonContactinformatie, met de
           verwijzing naar de bijbehorende Persoon.
+      - name: persoon_geschenk
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort PersoonGeschenk, met de verwijzing
+          naar de bijbehorende Persoon.
+      - name: persoon_loopbaan
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort PersoonLoopbaan, met de verwijzing
+          naar de bijbehorende Persoon.
+      - name: persoon_nevenfunctie
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort PersoonNevenfunctie, met de
+          verwijzing naar de bijbehorende Persoon.
+      - name: persoon_nevenfunctie_inkomsten
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort PersoonNevenfunctieInkomsten, met
+          de verwijzing naar de bijbehorende PersoonNevenfunctie.
+      - name: persoon_onderwijs
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort PersoonOnderwijs, met de verwijzing
+          naar de bijbehorende Persoon.
+      - name: persoon_reis
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort PersoonReis, met de verwijzing naar
+          de bijbehorende Persoon.
+      - name: fractie
+        description: Ruwe feed-rijen voor de entiteitsoort Fractie.
+      - name: fractie__atom_links
+        description: >
+          Door dlt automatisch afgesplitste Atom-links per Fractie-feedrij, met
+          onder andere de 'enclosure'-link naar een fractielogo.
+      - name: fractie_zetel
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort FractieZetel, met de verwijzing
+          naar de bijbehorende Fractie.
+      - name: fractie_zetel_persoon
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort FractieZetelPersoon, met de
+          verwijzingen naar de bijbehorende FractieZetel en Persoon.
+      - name: fractie_zetel_vacature
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort FractieZetelVacature, met de
+          verwijzing naar de bijbehorende FractieZetel.
+      - name: commissie
+        description: Ruwe feed-rijen voor de entiteitsoort Commissie.
+      - name: commissie_contactinformatie
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort CommissieContactinformatie, met
+          de verwijzing naar de bijbehorende Commissie.
+      - name: commissie_zetel
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort CommissieZetel, met de verwijzing
+          naar de bijbehorende Commissie.
+      - name: commissie_zetel_vast_persoon
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort CommissieZetelVastPersoon, met de
+          verwijzingen naar de bijbehorende CommissieZetel en Persoon.
+      - name: commissie_zetel_vast_vacature
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort CommissieZetelVastVacature, met de
+          verwijzingen naar de bijbehorende CommissieZetel en Fractie.
+      - name: commissie_zetel_vervanger_persoon
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort CommissieZetelVervangerPersoon, met
+          de verwijzingen naar de bijbehorende CommissieZetel en Persoon.
+      - name: commissie_zetel_vervanger_vacature
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort CommissieZetelVervangerVacature, met
+          de verwijzingen naar de bijbehorende CommissieZetel en Fractie.
+      - name: zaal
+        description: Ruwe feed-rijen voor de entiteitsoort Zaal.
