@@ -1,0 +1,64 @@
+{{
+    config(
+        unique_key='id',
+        incremental_strategy='merge_with_deletes',
+        deletion_relation='bronze.kamerstukdossier',
+        on_schema_change='fail',
+        contract={'enforced': true}
+    )
+}}
+
+WITH latest AS (
+    SELECT
+        id,
+        titel,
+        citeertitel,
+        alias,
+        CAST(nummer AS INTEGER) AS nummer,
+        toevoeging,
+        CAST(hoogste_volgnummer AS INTEGER) AS hoogste_volgnummer,
+        afgesloten,
+        kamer,
+        verwijderd,
+        bijgewerkt AS gewijzigd_op,
+        feed_updated AS api_gewijzigd_op
+    FROM {{ source('bronze', 'kamerstukdossier') }}
+    QUALIFY ROW_NUMBER() OVER (
+        PARTITION BY id
+        ORDER BY bijgewerkt DESC, feed_updated DESC, _dlt_id DESC
+    ) = 1
+),
+
+incoming AS (
+    SELECT
+        id,
+        titel,
+        citeertitel,
+        alias,
+        nummer,
+        toevoeging,
+        hoogste_volgnummer,
+        afgesloten,
+        kamer,
+        gewijzigd_op,
+        api_gewijzigd_op
+    FROM latest
+    WHERE NOT verwijderd
+        {% if is_incremental() %}
+        AND latest.api_gewijzigd_op > (SELECT MAX(api_gewijzigd_op) FROM {{ this }})
+        {% endif %}
+)
+
+SELECT
+    id,
+    titel,
+    citeertitel,
+    alias,
+    nummer,
+    toevoeging,
+    hoogste_volgnummer,
+    afgesloten,
+    kamer,
+    gewijzigd_op,
+    api_gewijzigd_op
+FROM incoming

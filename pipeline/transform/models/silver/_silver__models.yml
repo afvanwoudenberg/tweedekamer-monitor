@@ -1,6 +1,565 @@
 version: 2
 
 models:
+  - name: zaak
+    description: Actuele, ontdubbelde zaken binnen het parlementaire proces.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [kamerstukdossier_id]
+        expression: silver.kamerstukdossier (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Zaak.
+        data_tests: [unique, not_null]
+      - name: nummer
+        data_type: VARCHAR
+        description: Intern identificatienummer van een Zaak.
+      - name: soort
+        data_type: VARCHAR
+        description: Soort Zaak.
+      - name: onderwerp
+        data_type: VARCHAR
+        description: Onderwerp van een Zaak.
+      - name: gestart_op
+        data_type: DATE
+        description: Begindatum van een Zaak.
+      - name: organisatie
+        data_type: VARCHAR
+        description: Kamer van de Staten-Generaal die betrokken is bij een Zaak.
+      - name: titel
+        data_type: VARCHAR
+        description: Titel van een Zaak.
+      - name: citeertitel
+        data_type: VARCHAR
+        description: Citeertitel van een Zaak.
+      - name: alias
+        data_type: VARCHAR
+        description: Alias van een Zaak.
+      - name: grondslagvoorhang
+        data_type: VARCHAR
+        description: Grondslag voor de voorhangprocedure.
+      - name: termijn
+        data_type: TIMESTAMP
+        description: Einddatum van de behandeling van een Zaak.
+      - name: vergaderjaar
+        data_type: VARCHAR
+        description: Vergaderjaar waarin een Zaak wordt behandeld.
+      - name: volgnummer
+        data_type: INTEGER
+        description: Uniek nummer van een Zaak binnen een Kamerstukdossier.
+      - name: status
+        data_type: VARCHAR
+        description: Status van een Zaak.
+      - name: afgedaan
+        data_type: BOOLEAN
+        description: Geeft aan of een Zaak is afgedaan.
+      - name: groot_project
+        data_type: BOOLEAN
+        description: Geeft aan of een Zaak een groot project is.
+      - name: kabinetsappreciatie
+        data_type: VARCHAR
+        description: Kabinetsappreciatie van een Zaak.
+      - name: kamerstukdossier_id
+        data_type: VARCHAR
+        description: GUID van het bijbehorende Kamerstukdossier.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('kamerstukdossier'), field: id}
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum in het bronsysteem.
+        data_tests: [not_null]
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum zichtbaar in het Gegevensmagazijn.
+        data_tests: [not_null]
+
+  - name: zaak_actor
+    description: >
+      Actuele, ontdubbelde rollen van actoren binnen zaken. Verwijderde records
+      en records met onbekende niet-null parent references worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [zaak_id]
+        expression: silver.zaak (id)
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+      - type: foreign_key
+        columns: [fractie_id]
+        expression: silver.fractie (id)
+      - type: foreign_key
+        columns: [commissie_id]
+        expression: silver.commissie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een ZaakActor.
+        data_tests: [unique, not_null]
+      - name: zaak_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Zaak.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('zaak'), field: id}
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('persoon'), field: id}
+      - name: fractie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Fractie.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('fractie'), field: id}
+      - name: commissie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Commissie.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('commissie'), field: id}
+      - name: actor_naam
+        data_type: VARCHAR
+        description: Naam van een ZaakActor ten tijde van de Zaak.
+      - name: actor_fractie
+        data_type: VARCHAR
+        description: Fractie van een ZaakActor ten tijde van de Zaak.
+      - name: actor_afkorting
+        data_type: VARCHAR
+        description: Afkorting van een ZaakActor ten tijde van de Zaak.
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een ZaakActor ten tijde van de Zaak.
+      - name: relatie
+        data_type: VARCHAR
+        description: Rol van een ZaakActor in de Zaak.
+      - name: sid_actor
+        data_type: VARCHAR
+        description: Intern identificatienummer van een ZaakActor.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum in het bronsysteem.
+        data_tests: [not_null]
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum zichtbaar in het Gegevensmagazijn.
+        data_tests: [not_null]
+
+  - name: zaak_activiteit
+    description: Relatiebrug tussen Zaken en Activiteiten.
+    constraints:
+      - type: primary_key
+        columns: [zaak_id, activiteit_id]
+      - type: foreign_key
+        columns: [zaak_id]
+        expression: silver.zaak (id)
+      - type: foreign_key
+        columns: [activiteit_id]
+        expression: silver.activiteit (id)
+    columns:
+      - name: zaak_id
+        data_type: VARCHAR
+        description: Zaak in de relatie.
+      - name: activiteit_id
+        data_type: VARCHAR
+        description: Activiteit in de relatie.
+
+  - name: zaak_agendapunt
+    description: Relatiebrug tussen Zaken en Agendapunten.
+    constraints:
+      - type: primary_key
+        columns: [zaak_id, agendapunt_id]
+      - type: foreign_key
+        columns: [zaak_id]
+        expression: silver.zaak (id)
+      - type: foreign_key
+        columns: [agendapunt_id]
+        expression: silver.agendapunt (id)
+    columns:
+      - name: zaak_id
+        data_type: VARCHAR
+        description: Zaak in de relatie.
+      - name: agendapunt_id
+        data_type: VARCHAR
+        description: Agendapunt in de relatie.
+
+  - name: zaak_gerelateerd_vanuit
+    description: Zelfrefererende relatiebrug voor gerelateerde Zaken.
+    constraints:
+      - type: primary_key
+        columns: [zaak_id, gerelateerd_vanuit_id]
+      - type: foreign_key
+        columns: [zaak_id]
+        expression: silver.zaak (id)
+      - type: foreign_key
+        columns: [gerelateerd_vanuit_id]
+        expression: silver.zaak (id)
+    columns:
+      - name: zaak_id
+        data_type: VARCHAR
+        description: Zaak in de relatie.
+      - name: gerelateerd_vanuit_id
+        data_type: VARCHAR
+        description: Gerelateerde bronzaak.
+
+  - name: zaak_vervangen_vanuit
+    description: Zelfrefererende relatiebrug voor vervangen Zaken.
+    constraints:
+      - type: primary_key
+        columns: [zaak_id, vervangen_vanuit_id]
+      - type: foreign_key
+        columns: [zaak_id]
+        expression: silver.zaak (id)
+      - type: foreign_key
+        columns: [vervangen_vanuit_id]
+        expression: silver.zaak (id)
+    columns:
+      - name: zaak_id
+        data_type: VARCHAR
+        description: Zaak in de relatie.
+      - name: vervangen_vanuit_id
+        data_type: VARCHAR
+        description: Vervangen bronzaak.
+
+  - name: activiteit_actor
+    description: >
+      Actuele, ontdubbelde rollen van actoren binnen activiteiten. Verwijderde
+      records en records met onbekende niet-null parent references worden niet
+      opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [activiteit_id]
+        expression: silver.activiteit (id)
+      - type: foreign_key
+        columns: [commissie_id]
+        expression: silver.commissie (id)
+      - type: foreign_key
+        columns: [persoon_id]
+        expression: silver.persoon (id)
+      - type: foreign_key
+        columns: [fractie_id]
+        expression: silver.fractie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een ActiviteitActor.
+        data_tests: [unique, not_null]
+      - name: activiteit_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Activiteit.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('activiteit'), field: id}
+      - name: commissie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Commissie.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('commissie'), field: id}
+      - name: persoon_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Persoon.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('persoon'), field: id}
+      - name: fractie_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Fractie.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('fractie'), field: id}
+      - name: actor_naam
+        data_type: VARCHAR
+        description: Naam van een ActiviteitActor ten tijde van de Activiteit.
+      - name: actor_fractie
+        data_type: VARCHAR
+        description: Fractie van een ActiviteitActor ten tijde van de Activiteit.
+      - name: relatie
+        data_type: VARCHAR
+        description: Relatie van de ActiviteitActor met de Activiteit.
+      - name: volgorde
+        data_type: INTEGER
+        description: Positie van een ActiviteitActor op de sprekerslijst.
+      - name: functie
+        data_type: VARCHAR
+        description: Functie van een ActiviteitActor ten tijde van de Activiteit.
+      - name: spreektijd
+        data_type: VARCHAR
+        description: Spreektijd die een ActiviteitActor heeft bij de Activiteit.
+      - name: sid_actor
+        data_type: VARCHAR
+        description: Intern identificatienummer van een ActiviteitActor.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum in het bronsysteem.
+        data_tests: [not_null]
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum zichtbaar in het Gegevensmagazijn.
+        data_tests: [not_null]
+
+  - name: agendapunt
+    description: >
+      Actuele, ontdubbelde geregistreerde onderwerpen van activiteiten.
+      Verwijderde agendapunten en records zonder een actieve Activiteit worden
+      niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [activiteit_id]
+        expression: silver.activiteit (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Agendapunt.
+        data_tests: [unique, not_null]
+      - name: activiteit_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Activiteit.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('activiteit'), field: id}
+      - name: nummer
+        data_type: VARCHAR
+        description: Intern identificatienummer van een Agendapunt.
+      - name: onderwerp
+        data_type: VARCHAR
+        description: Onderwerp van een Agendapunt.
+      - name: aanvangstijd
+        data_type: TIMESTAMP
+        description: Begintijd van een Agendapunt.
+      - name: eindtijd
+        data_type: TIMESTAMP
+        description: Eindtijd van een Agendapunt.
+      - name: volgorde
+        data_type: INTEGER
+        description: Positie van een Agendapunt op de agenda.
+      - name: rubriek
+        data_type: VARCHAR
+        description: Rubriek waartoe een Agendapunt behoort.
+      - name: noot
+        data_type: VARCHAR
+        description: Notitie bij een Agendapunt.
+      - name: status
+        data_type: VARCHAR
+        description: Status van een Agendapunt.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum in het bronsysteem.
+        data_tests: [not_null]
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum zichtbaar in het Gegevensmagazijn.
+        data_tests: [not_null]
+
+  - name: kamerstukdossier
+    description: >
+      Actuele, ontdubbelde dossiers met documenten over een specifiek onderwerp.
+      Verwijderde dossiers worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Kamerstukdossier.
+        data_tests: [unique, not_null]
+      - name: titel
+        data_type: VARCHAR
+        description: Titel van een Kamerstukdossier.
+      - name: citeertitel
+        data_type: VARCHAR
+        description: Citeertitel van een Kamerstukdossier.
+      - name: alias
+        data_type: VARCHAR
+        description: Alias van een Kamerstukdossier.
+      - name: nummer
+        data_type: INTEGER
+        description: Intern identificatienummer van een Kamerstukdossier.
+      - name: toevoeging
+        data_type: VARCHAR
+        description: Begrotingshoofdstukvermelding bij een Kamerstukdossier.
+      - name: hoogste_volgnummer
+        data_type: INTEGER
+        description: Aantal documenten in een Kamerstukdossier.
+      - name: afgesloten
+        data_type: BOOLEAN
+        description: Geeft aan of een Kamerstukdossier is afgesloten.
+      - name: kamer
+        data_type: VARCHAR
+        description: Kamer van de Staten-Generaal die betrokken is bij een Kamerstukdossier.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum in het bronsysteem.
+        data_tests: [not_null]
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum zichtbaar in het Gegevensmagazijn.
+        data_tests: [not_null]
+
+  - name: activiteit
+    description: >
+      Actuele, ontdubbelde activiteiten als onderdeel van het parlementaire
+      proces. Verwijderde activiteiten en activiteiten met een onbekende
+      voortouwcommissie worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [voortouwcommissie_id]
+        expression: silver.commissie (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Activiteit.
+        data_tests: [unique, not_null]
+      - name: soort
+        data_type: VARCHAR
+        description: Soort Activiteit.
+      - name: nummer
+        data_type: VARCHAR
+        description: Intern identificatienummer van een Activiteit.
+      - name: onderwerp
+        data_type: VARCHAR
+        description: Onderwerp van een Activiteit.
+      - name: datum_soort
+        data_type: VARCHAR
+        description: Context voor de datum van een Activiteit.
+      - name: datum
+        data_type: DATE
+        description: Datum waarop een Activiteit plaatsvindt.
+      - name: aanvangstijd
+        data_type: TIMESTAMP
+        description: Tijd waarop een Activiteit begint.
+      - name: eindtijd
+        data_type: TIMESTAMP
+        description: Tijd waarop een Activiteit eindigt.
+      - name: locatie
+        data_type: VARCHAR
+        description: Locatie van een Activiteit.
+      - name: besloten
+        data_type: BOOLEAN
+        description: Geeft aan of een Activiteit besloten is.
+      - name: status
+        data_type: VARCHAR
+        description: Status van een Activiteit.
+      - name: vergaderjaar
+        data_type: VARCHAR
+        description: Vergaderjaar waarin een Activiteit plaatsvindt.
+      - name: kamer
+        data_type: VARCHAR
+        description: Kamer van de Staten-Generaal die betrokken is bij een Activiteit.
+      - name: noot
+        data_type: VARCHAR
+        description: Notitie bij een Activiteit.
+      - name: vrs_nummer
+        data_type: VARCHAR
+        description: Intern VRS-nummer van een Activiteit.
+      - name: sid_voortouw
+        data_type: VARCHAR
+        description: Intern identificatienummer van de voortouwcommissie.
+      - name: voortouwnaam
+        data_type: VARCHAR
+        description: Naam van de voortouwcommissie.
+      - name: voortouwafkorting
+        data_type: VARCHAR
+        description: Afkorting van de voortouwcommissie.
+      - name: voortouwkortenaam
+        data_type: VARCHAR
+        description: Korte naam van de voortouwcommissie.
+      - name: voortouwcommissie_id
+        data_type: VARCHAR
+        description: GUID van de bijbehorende voortouwcommissie.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('commissie'), field: id}
+      - name: aanvraagdatum
+        data_type: DATE
+        description: Datum waarop een Activiteit is aangevraagd.
+      - name: datum_verzoek_eerste_verlenging
+        data_type: DATE
+        description: Datum van het eerste verzoek tot verlenging.
+      - name: datum_mededeling_eerste_verlenging
+        data_type: DATE
+        description: Datum van de mededeling over het eerste verlengingsverzoek.
+      - name: datum_verzoek_tweede_verlenging
+        data_type: DATE
+        description: Datum van het tweede verzoek tot verlenging.
+      - name: datum_mededeling_tweede_verlenging
+        data_type: DATE
+        description: Datum van de mededeling over het tweede verlengingsverzoek.
+      - name: vervaldatum
+        data_type: DATE
+        description: Datum waarop een Activiteit vervalt.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum in het bronsysteem.
+        data_tests: [not_null]
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum zichtbaar in het Gegevensmagazijn.
+        data_tests: [not_null]
+
+  - name: activiteit_vervangen_vanuit
+    description: Relatiebrug voor activiteiten die vanuit een andere activiteit zijn vervangen.
+    constraints:
+      - type: primary_key
+        columns: [activiteit_id, vervangen_vanuit_id]
+      - type: foreign_key
+        columns: [activiteit_id]
+        expression: silver.activiteit (id)
+      - type: foreign_key
+        columns: [vervangen_vanuit_id]
+        expression: silver.activiteit (id)
+    columns:
+      - name: activiteit_id
+        data_type: VARCHAR
+        description: Activiteit die de andere activiteit verving.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('activiteit'), field: id}
+      - name: vervangen_vanuit_id
+        data_type: VARCHAR
+        description: Activiteit die werd vervangen.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('activiteit'), field: id}
+
+  - name: activiteit_voortgezet_vanuit
+    description: Relatiebrug voor activiteiten die vanuit een andere activiteit zijn voortgezet.
+    constraints:
+      - type: primary_key
+        columns: [activiteit_id, voortgezet_vanuit_id]
+      - type: foreign_key
+        columns: [activiteit_id]
+        expression: silver.activiteit (id)
+      - type: foreign_key
+        columns: [voortgezet_vanuit_id]
+        expression: silver.activiteit (id)
+    columns:
+      - name: activiteit_id
+        data_type: VARCHAR
+        description: Activiteit die vanuit een andere activiteit is voortgezet.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('activiteit'), field: id}
+      - name: voortgezet_vanuit_id
+        data_type: VARCHAR
+        description: Activiteit waarop deze activiteit voortbouwt.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('activiteit'), field: id}
+
   - name: persoon
     description: >
       Actuele, ontdubbelde momentopname van elke Persoon (een persoon als actor
@@ -1522,5 +2081,169 @@ models:
         description: >
           Datum en tijd waarop de toevoeging of laatste wijziging van een
           CommissieZetelVervangerVacature zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: vergadering
+    description: >
+      Actuele, ontdubbelde afgeronde openbare vergaderingen waarvan een verslag
+      beschikbaar is. Verwijderde vergaderingen worden niet opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Vergadering.
+        data_tests:
+          - unique
+          - not_null
+      - name: soort
+        data_type: VARCHAR
+        description: Soort vergadering, bijvoorbeeld Commissie of Plenair.
+      - name: titel
+        data_type: VARCHAR
+        description: Titel van een vergadering.
+      - name: zaal
+        data_type: VARCHAR
+        description: Zaal waar een Vergadering plaatsvindt.
+      - name: vergaderjaar
+        data_type: VARCHAR
+        description: Vergaderjaar waarin een Vergadering plaatsvindt, in het formaat YYYY-YYYY.
+      - name: vergadering_nummer
+        data_type: INTEGER
+        description: Intern identificatienummer van een Vergadering.
+      - name: datum
+        data_type: DATE
+        description: Datum en tijd van een Vergadering.
+      - name: aanvangstijd
+        data_type: TIMESTAMP
+        description: Begintijd van een Vergadering.
+      - name: sluiting
+        data_type: TIMESTAMP
+        description: Eindtijd van een Vergadering.
+      - name: kamer
+        data_type: VARCHAR
+        description: Kamer van de Staten-Generaal die betrokken is bij een Vergadering.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een Vergadering heeft aangemaakt
+          of aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een
+          Vergadering zichtbaar is geworden in het Gegevensmagazijn.
+        data_tests:
+          - not_null
+
+  - name: reservering
+    description: >
+      Actuele, ontdubbelde reserveringen van zalen voor activiteiten. De bron
+      bevat maximaal één activiteit per reservering in de huidige data; de
+      activiteitrelatie is daarom opgenomen als activiteit_id.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [activiteit_id]
+        expression: silver.activiteit (id)
+      - type: foreign_key
+        columns: [zaal_id]
+        expression: silver.zaal (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Reservering.
+        data_tests: [unique, not_null]
+      - name: activiteit_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Activiteit.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('activiteit'), field: id}
+      - name: zaal_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer van de bijbehorende Zaal.
+        data_tests:
+          - relationships:
+              arguments: {to: ref('zaal'), field: id}
+      - name: nummer
+        data_type: VARCHAR
+        description: Intern identificatienummer van een Reservering.
+      - name: activiteit_nummer
+        data_type: VARCHAR
+        description: Intern nummer van de bijbehorende Activiteit.
+      - name: status_code
+        data_type: VARCHAR
+        description: Interne statuscode van een Reservering.
+      - name: status_naam
+        data_type: VARCHAR
+        description: Interne statusnaam van een Reservering.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum in het bronsysteem.
+        data_tests: [not_null]
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: Laatste wijzigingsdatum zichtbaar in het Gegevensmagazijn.
+        data_tests: [not_null]
+
+  - name: verslag
+    description: >
+      Actuele, ontdubbelde verslagen van vergaderingen. Verwijderde verslagen
+      en verslagen zonder een actieve bijbehorende Vergadering worden niet
+      opgenomen.
+    constraints:
+      - type: primary_key
+        columns: [id]
+      - type: foreign_key
+        columns: [vergadering_id]
+        expression: silver.vergadering (id)
+    columns:
+      - name: id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van een Verslag.
+        data_tests:
+          - unique
+          - not_null
+      - name: vergadering_id
+        data_type: VARCHAR
+        description: Uniek identificatienummer (GUID) van de bijbehorende Vergadering.
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('vergadering')
+                field: id
+      - name: soort
+        data_type: VARCHAR
+        description: Soort Verslag, bijvoorbeeld Eindpublicatie, Tussenpublicatie of Voorpublicatie.
+      - name: status
+        data_type: VARCHAR
+        description: Status van een verslag.
+      - name: content_type
+        data_type: VARCHAR
+        description: Bestandsformaat van een Verslag, doorgaans text/xml.
+      - name: content_length
+        data_type: INTEGER
+        description: Bestandsgrootte (in bytes) van een Verslag.
+      - name: xml_url
+        data_type: VARCHAR
+        description: Downloadlink naar het XML-bestand van een Verslag uit de Atom-feed.
+      - name: gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop het bronsysteem een Verslag heeft aangemaakt of
+          aangepast.
+        data_tests:
+          - not_null
+      - name: api_gewijzigd_op
+        data_type: TIMESTAMP WITH TIME ZONE
+        description: >
+          Datum en tijd waarop de toevoeging of laatste wijziging van een Verslag
+          zichtbaar is geworden in het Gegevensmagazijn.
         data_tests:
           - not_null

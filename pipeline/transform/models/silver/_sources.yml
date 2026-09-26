@@ -9,6 +9,38 @@ sources:
       een entiteit heeft aangemaakt of gewijzigd; er is nog geen deduplicatie of
       opschoning toegepast.
     tables:
+      - name: activiteit
+        description: Ruwe feed-rijen voor de entiteitsoort Activiteit.
+      - name: activiteit__vervangen_vanuit
+        description: >
+          Dlt-childrijen voor de Activiteit-relatie VervangenVanuit.
+      - name: activiteit__voortgezet_vanuit
+        description: >
+          Dlt-childrijen voor de Activiteit-relatie VoortgezetVanuit.
+      - name: activiteit_actor
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort ActiviteitActor, met optionele
+          verwijzingen naar Activiteit, Commissie, Persoon en Fractie.
+      - name: agendapunt
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort Agendapunt, met de verwijzing naar
+          de bijbehorende Activiteit.
+      - name: kamerstukdossier
+        description: Ruwe feed-rijen voor de entiteitsoort Kamerstukdossier.
+      - name: zaak
+        description: Ruwe feed-rijen voor de entiteitsoort Zaak.
+      - name: zaak__activiteit
+        description: Dlt-childrijen voor de Zaak-Activiteit-relatie.
+      - name: zaak__agendapunt
+        description: Dlt-childrijen voor de Zaak-Agendapunt-relatie.
+      - name: zaak__gerelateerd_vanuit
+        description: Dlt-childrijen voor de Zaak-GerelateerdVanuit-relatie.
+      - name: zaak__vervangen_vanuit
+        description: Dlt-childrijen voor de Zaak-VervangenVanuit-relatie.
+      - name: zaak_actor
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort ZaakActor, met optionele
+          verwijzingen naar Zaak, Persoon, Fractie en Commissie.
       - name: persoon
         description: >
           Ruwe feed-rijen voor de entiteitsoort Persoon (een persoon als actor
@@ -90,5 +122,20 @@ sources:
         description: >
           Ruwe feed-rijen voor de entiteitsoort CommissieZetelVervangerVacature, met
           de verwijzingen naar de bijbehorende CommissieZetel en Fractie.
+      - name: vergadering
+        description: Ruwe feed-rijen voor de entiteitsoort Vergadering.
+      - name: verslag
+        description: >
+          Ruwe feed-rijen voor de entiteitsoort Verslag, met de verwijzing naar
+          de bijbehorende Vergadering.
+      - name: verslag__atom_links
+        description: >
+          Door dlt automatisch afgesplitste Atom-links per Verslag-feedrij, met
+          de 'enclosure'-link naar het XML-bestand van het verslag.
+      - name: reservering
+        description: Ruwe feed-rijen voor de entiteitsoort Reservering.
+      - name: reservering__activiteit
+        description: >
+          Dlt-childrijen voor de Activiteit-relatie van een Reservering.
       - name: zaal
         description: Ruwe feed-rijen voor de entiteitsoort Zaal.

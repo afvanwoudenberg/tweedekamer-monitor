@@ -12,54 +12,52 @@
         ) }}
     {% endif %}
 
-    {% if unique_key is not string %}
-        {{ exceptions.raise_compiler_error(
-            "merge_with_deletes currently requires a single-column unique_key"
-        ) }}
-    {% endif %}
+    {% set unique_keys = [unique_key] if unique_key is string else unique_key %}
+    {% set deletion_key = unique_keys[0] %}
 
     {% set column_names = dest_columns | map(attribute='name') | list %}
     {% set quoted_columns = get_quoted_csv(column_names) %}
     {% set active_values = [] %}
     {% set source_values = [] %}
-    {% set deleted_values = [] %}
     {% set update_statements = [] %}
 
     {% for column_name in column_names %}
         {% do active_values.append('DBT_ACTIVE_SOURCE.' ~ adapter.quote(column_name)) %}
         {% do source_values.append('DBT_SOURCE.' ~ adapter.quote(column_name)) %}
-        {% if column_name != unique_key %}
+        {% if column_name not in unique_keys %}
             {% set update_statement %}
                 UPDATE {{ target_relation }} AS DBT_TARGET
                 SET {{ adapter.quote(column_name) }} = DBT_SOURCE.{{ adapter.quote(column_name) }}
                 FROM {{ temp_relation }} AS DBT_SOURCE
-                WHERE DBT_TARGET.{{ adapter.quote(unique_key) }} = DBT_SOURCE.{{ adapter.quote(unique_key) }}
+                WHERE {% for key in unique_keys %}DBT_TARGET.{{ adapter.quote(key) }} = DBT_SOURCE.{{ adapter.quote(key) }}{% if not loop.last %} AND {% endif %}{% endfor %}
                   AND DBT_TARGET.{{ adapter.quote(column_name) }} IS DISTINCT FROM DBT_SOURCE.{{ adapter.quote(column_name) }}
             {% endset %}
             {% do update_statements.append(update_statement) %}
         {% endif %}
-        {% if column_name == unique_key %}
-            {% do deleted_values.append('DBT_DELETED_SOURCE.' ~ adapter.quote(column_name)) %}
-        {% else %}
-            {% do deleted_values.append('NULL') %}
-        {% endif %}
     {% endfor %}
 
-    {% set latest_deleted_sql %}
-        SELECT {{ unique_key }}
-        FROM (
-            SELECT
-                {{ unique_key }},
-                verwijderd,
-                ROW_NUMBER() OVER (
-                    PARTITION BY {{ unique_key }}
-                    ORDER BY feed_updated DESC, bijgewerkt DESC, _dlt_id DESC
-                ) AS version_number
-            FROM {{ deletion_relation }}
-        ) AS latest
-        WHERE version_number = 1
-            AND verwijderd = true
-    {% endset %}
+    {% if deletion_relation == 'none' %}
+        {% set latest_deleted_sql %}
+            SELECT NULL AS id
+            WHERE FALSE
+        {% endset %}
+    {% else %}
+        {% set latest_deleted_sql %}
+            SELECT {{ deletion_key }}
+            FROM (
+                SELECT
+                    {{ deletion_key }},
+                    verwijderd,
+                    ROW_NUMBER() OVER (
+                        PARTITION BY {{ deletion_key }}
+                        ORDER BY feed_updated DESC, bijgewerkt DESC, _dlt_id DESC
+                    ) AS version_number
+                FROM {{ deletion_relation }}
+            ) AS latest
+            WHERE version_number = 1
+                AND verwijderd = true
+        {% endset %}
+    {% endif %}
 
     {% set dependent_query %}
         SELECT DISTINCT
@@ -92,7 +90,7 @@
             {% set delete_statement %}
                 DELETE FROM "{{ child_schema }}"."{{ child_table }}"
                 WHERE "{{ child_column }}" IN (
-                    SELECT {{ unique_key }}
+                    SELECT {{ deletion_key }}
                     FROM ({{ latest_deleted_sql }}) AS DBT_DELETED_KEYS
                 )
             {% endset %}
@@ -102,10 +100,10 @@
 
     {% set delete_sql %}
         DELETE FROM {{ target_relation }} AS DBT_TARGET
-        WHERE {{ unique_key }} IN (
-            SELECT {{ unique_key }}
+        WHERE {% for key in unique_keys %}{{ adapter.quote(key) }} IN (
+            SELECT {{ deletion_key }}
             FROM ({{ latest_deleted_sql }}) AS DBT_DELETED_KEYS
-        )
+        ){% if not loop.last %} OR {% endif %}{% endfor %}
     {% endset %}
 
     {% set insert_sql %}
@@ -115,7 +113,7 @@
         WHERE NOT EXISTS (
             SELECT 1
             FROM {{ target_relation }} AS DBT_TARGET
-            WHERE DBT_TARGET.{{ adapter.quote(unique_key) }} = DBT_SOURCE.{{ adapter.quote(unique_key) }}
+            WHERE {% for key in unique_keys %}DBT_TARGET.{{ adapter.quote(key) }} = DBT_SOURCE.{{ adapter.quote(key) }}{% if not loop.last %} AND {% endif %}{% endfor %}
         )
     {% endset %}
 
