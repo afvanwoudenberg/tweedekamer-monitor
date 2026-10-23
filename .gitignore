@@ -223,3 +223,7 @@ __marimo__/
 # dbt local metadata
 pipeline/transform/.user.yml
 tweedekamer.duckdb
+app_volledig/
+*.duckdb
+__pycache__/
+.ipynb_checkpoints/
