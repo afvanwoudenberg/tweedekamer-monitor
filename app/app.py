@@ -99,6 +99,11 @@ pages = st.navigation(
                 title="Soorten bronnen en publicatiesnelheid",
                 icon=":material/speed:",
             ),
+            st.Page(
+                "pages/besluiten.py",
+                title="Besluiten via stemming",
+                icon=":material/done_outline:",
+            ),
         ],
     }
 )
