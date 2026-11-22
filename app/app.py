@@ -90,6 +90,11 @@ pages = st.navigation(
                 icon=":material/work_history:",
             ),
             st.Page(
+                "pages/Commissies_9.py",
+                title="Commissies",
+                icon=":material/gavel:",
+            ),
+            st.Page(
                 "pages/3_Bronvermelding_csv.py",
                 title="Bronvermelding",
                 icon=":material/link:",
