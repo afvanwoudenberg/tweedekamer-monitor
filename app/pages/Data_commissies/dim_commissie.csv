@@ -1,0 +1,133 @@
+commissie_id,naam_nl,afkorting,soort,commissietype,datum_actief,datum_inactief,is_actief,aantal_zetels
+4e995993-6961-4d0b-b054-ae2ab9e93b1b,Vaste commissie voor Buitenlandse Zaken,BUZA,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,,,True,34
+6e51599f-7a58-4162-b09a-974578f39d82,Interparlementaire Commissie van de Nederlandse Taalunie,TAAL,Interparlementaire betrekkingen,Interparlementair,,,True,9
+a2f228e6-15bd-46e5-a088-4c3741036b05,IPC Artikel 13,IPC Artikel 13,Overige Commissies,Overig,,2016-06-30,False,0
+e9bf81c4-abc0-4908-b2f8-087b4fe936a4,Vaste commissie voor Veiligheid en Justitie,VJ,Dienst Commissieondersteuning Bestuur en Onderwijs,Vast,,2017-11-09,False,0
+177c62b9-fca4-462e-bc71-08d198297339,Parlementaire enquêtecommissie aardgaswinning Groningen,PEAG,Overige Commissies,Tijdelijk,2021-02-11,2023-04-20,False,0
+33fe6995-b413-4011-8792-62ad4e211885,Tijdelijke commissie Biotechnologie,TCBIO,,Tijdelijk,,,True,0
+8b038ac9-ba74-4b0d-930b-1d848d792f4c,Contactgroep Groot Brittannië,CGGB,,Overig,,,True,0
+90f412fa-d124-49d1-a550-37a4220b0b69,Vaste commissie voor Buitenlandse Handel en Ontwikkelingssamenwerking,BHO,,Vast,2026-02-25,,True,33
+9534bff5-4d85-4b56-b5d1-8937002751d1,"Vaste commissie voor Volkshuisvesting, Ruimtelijke Ordening en Milieubeheer",VROM,,Vast,,,True,0
+b4a385c0-93d9-4a3e-8903-780c760777ba,Themacommissie Dierhouderij,THDI,,Overig,,,True,0
+d4ad3a6a-f760-4783-a628-5ff1469ecd07,Parlementaire Assemblee van de Raad van Europa,RVE,Interparlementaire betrekkingen,Overig,,,True,7
+d8c4982c-be0d-4d55-a6a7-074b3f8dd5ab,"Vaste commissie voor Landbouw, Visserij, Voedselzekerheid en Natuur",LVVN,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,2024-07-02,,True,32
+ef8a28ac-cded-4963-bef9-d6077dd16905,Vaste commissie voor Economische Zaken,EZ,Dienst Commissieondersteuning Sociaal en Financieel,Vast,,2017-11-09,False,0
+0aba6377-70ac-4180-a372-87d78762a572,Benelux Interparlementaire Assemblee,Bene,Interparlementaire betrekkingen,Interparlementair,,,True,18
+17c262fc-1ac9-489f-85c8-9a2e6977f126,Stuurgroep Automatisering en Documentatie,STAD,,Overig,,,True,0
+2634a212-4b16-4891-9f34-42c8c68c7c43,Tijdelijke commissie Onderzoek integratiebeleid,TCINT,,Tijdelijk,,,True,0
+3816ffe5-e8ae-478a-88b4-5901d43f1a60,Commissie voor de Werkwijze,WERK,Algemeen,Overig,,,True,13
+48c117dc-4dd3-410e-ac30-14437c2a2f08,Vaste commissie voor Volkshuisvesting en Ruimtelijke Ordening,VRO,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,2024-07-02,,True,32
+d3720177-9fec-4741-a3e8-edfb2f4b0ef5,"Vaste commissie voor Economische Zaken, Landbouw en Innovatie",ELI,,Vast,,,True,0
+fd1dd9b4-1e18-4974-bac0-539e8034dee2,Tijdelijke commissie College van Toezicht Centrale Verzekeringen,CTSV,Overige Commissies,Tijdelijk,,,True,0
+0502e352-4f29-404e-bdfe-889b1254946d,Tijdelijke commissie toezicht Verzekeringskamer,TVK,,Tijdelijk,,,True,0
+0c711788-a07a-4d93-bf97-9fca0bf5f0ec,Commissie voor de emolumenten van de leden van de Tweede Kamer der Staten-Generaal,Emol,,Overig,,,True,0
+14cac666-51cb-4154-80da-9b0e2eeb5014,Vaste commissie voor Justitie en Veiligheid,J&V,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,2017-11-09,,True,34
+4c883677-a54d-428f-a8b7-94c3f3756854,Enquêtecommissie Opsporingsmethoden,OPSMETH,,Tijdelijk,,,True,0
+524d5de6-83dd-4754-9e1e-c10fc49ad9be,Vaste commissie voor Defensie,DEF,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,,,True,34
+95b0ee80-b870-4be5-a567-f7e980049ed7,parlementaire enquetecommissie Fyra,PEF,Dienst Commissieondersteuning Bestuur en Onderwijs,Overig,,2017-01-19,False,0
+b3418fdf-3caa-49ef-9270-6fe57a6a8501,Vaste commissie voor Economische Zaken,EZ,Dienst Commissieondersteuning Sociaal en Financieel,Vast,2024-07-02,,True,32
+c6ad1d42-fb0f-4678-b38e-495cbf020bd3,Tijdelijke commissie Parlementair onderzoek Onderwijsvernieuwingen,TCPOO,,Tijdelijk,,,True,0
+dc296029-ed0e-47d4-bd39-1726f9f516ce,OVSE Parlementaire Assemblee,OVSE,Interparlementaire betrekkingen,Overig,,,True,6
+e1983fd8-9393-4814-8751-50f0d802a512,Vaste commissie voor Economische Zaken en Klimaat,EZK,Dienst Commissieondersteuning Sociaal en Financieel,Vast,2017-11-09,2024-07-02,False,0
+1801ceda-2c73-46c0-b576-8b9edf46336b,Enquêtecommissie Srebrenica,Srebr,,Tijdelijk,,,True,0
+34cee8a9-9682-4fb7-8599-6d08b9198b8e,Tijdelijke commissie Wet op de parlementaire enquête,TCWPE,,Tijdelijk,2026-03-04,,True,3
+75337852-6240-4696-83ab-c543ee05cf45,Vaste commissie voor Asiel en Migratie,AM,,Vast,2024-07-02,,True,33
+8390c4be-e5fc-474d-b309-d11f16147e0f,Tijdelijke commissie onderzoek Zorguitgaven,TCOZ,,Tijdelijk,,,True,0
+9137ee0d-6b41-4336-95ae-60aec9f873ad,Tijdelijke commissie Corona,TCC,Overige Commissies,Tijdelijk,2022-06-30,2023-12-13,False,0
+b18e6abf-15b8-445f-a177-e1823ee63424,Vaste commissie voor Sociale Zaken en Werkgelegenheid,SZW,Dienst Commissieondersteuning Sociaal en Financieel,Vast,,,True,34
+7628b20d-ac20-4854-bf54-a003f683fd22,IPC Energie,IPC Energie,,Overig,,,True,0
+791b7605-4645-4f80-8092-0be71c859957,Tijdelijke commissie ICT,TCICT,,Tijdelijk,,,True,0
+85cc9502-1c99-422f-91fb-0c39aba9bcab,Tijdelijke Commissie Onderzoek TBS,TCTBS,,Tijdelijk,,,True,0
+a65f93b3-3f18-49d0-a224-cb2b0ca26635,Vaste commissie voor Buitenlandse Handel en Ontwikkelingshulp,BHO,,Vast,2024-07-02,2026-02-25,False,0
+a72e2a10-857a-4e41-a477-b68f3ad7f990,Tijdelijke commissie aanvullende onderwerpen NIOD-rapport,TCNIOD,,Tijdelijk,,,True,0
+bdcee0c2-2d54-4d8a-85bd-0848599d2469,Tijdelijke commissie benoeming Nationale ombudsman,TCBNO,,Tijdelijk,,,True,0
+0167bf15-89c2-4ca2-9bca-4dfd79c3533a,Tijdelijke commissie Huizenprijzen,TCH,Dienst Commissieondersteuning Bestuur en Onderwijs,Tijdelijk,,,True,0
+02eee97c-7ae3-4340-9f59-730c8aff32d8,Tijdelijke commissie Onderzoek naar Infrastructuurprojecten,TCINFRA,,Tijdelijk,,,True,0
+3126fff1-9188-4cfc-9bd3-8bf0edfe032a,"Vaste commissie voor Onderwijs, Cultuur en Wetenschap",OCW,Dienst Commissieondersteuning Bestuur en Onderwijs,Vast,,,True,33
+328dc400-1c8f-433f-b879-db9f6c061327,Strategisch Overleg Informatievoorziening,STOI,,Overig,,,True,0
+b7cb67c2-71c7-478c-b3cf-1498e06f8f89,NAVO Parlementaire Assemblee,NAA,Interparlementaire betrekkingen,Overig,,,True,7
+ddf15bc6-1cce-4ca2-ae83-50907d527e5a,Vaste commissie voor Verkeer en Waterstaat,VW,,Vast,,2010-10-14,False,0
+f03add63-0be4-49cb-bb30-51a99bd03923,Tijdelijke commissie Fyra,TCFYRA,,Tijdelijk,2014-01-01,2016-01-01,False,0
+0680fd41-3621-4c1e-b813-fecf63b88ac7,Commissie voor de Inlichtingen- en Veiligheidsdiensten,IV,Algemeen,Overig,,,True,5
+117509c5-0b87-48c1-91a4-6264ff34cdb7,Tijdelijke commissie Woningcorporaties,TCW,,Tijdelijk,,,True,0
+4de8b7dc-61fd-415e-a6bc-7fb3e78116bb,Enquêtecommissie Vliegramp Bijlmermeer,BIJL,,Tijdelijk,,,True,0
+4e2ced14-ec17-43f1-8b5f-4eadc05b4589,Vaste commissie voor Klimaat en Groene Groei,KGG,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,2024-07-02,,True,32
+691aea0e-1191-455b-b107-2e81a3fa6f37,Algemene commissie voor Jeugdzorg,JEUGD,,Overig,,,True,0
+9f26ca0e-3408-453d-b68b-86672ab897ad,Commissie voor de Verzoekschriften en de Burgerinitiatieven,VERZ,Algemeen,Overig,,,True,7
+cdd80994-bba8-467c-8bcb-9726860fc482,Commissie voor het Onderzoek van de Geloofsbrieven,GELO,,Overig,,,True,5
+d5fc4e16-8fe6-4fca-b71f-ab8fc8b510a3,Kunstcommissie,KUNST,,Overig,,2012-11-14,False,0
+db9804e9-d3a6-4218-968c-adcdda4d65f7,Parlementaire enquêtecommissie Woningcorporaties,PEW,,Tijdelijk,,,True,0
+def27d77-515a-4f81-9980-146f9edfa641,Tijdelijke commissie Digitale toekomst,TCDT,Overige Commissies,Tijdelijk,2019-07-03,2021-04-06,False,0
+ecb03ef5-23f6-4d15-af6e-68ca61ce08e3,Commissie van onderzoek,Cvo,,Overig,,,True,0
+3cb13fb3-3d44-4e2c-a234-d1ddd7395e2f,IPC Mensenhandel,IPC Mensenhandel,,Overig,,,True,0
+3e1119ee-7a05-4edd-b390-581e0dc34f8d,Commissie Vernieuwing Wet op de Parlementaire Enquête,VWPE,,Tijdelijk,,,True,0
+41214cf9-108c-4405-aed2-54c13adf9a82,Tijdelijke commissie Breed welvaartsbegrip,TCBRW,Dienst Commissieondersteuning Sociaal en Financieel,Tijdelijk,2015-10-06,2017-02-21,False,0
+82b6423c-2185-4611-8407-cf8d1a2beb5e,Tijdelijke commissie evaluatie Wet Parlementaire Enquête,TCEWPE,Dienst Commissieondersteuning Bestuur en Onderwijs,Tijdelijk,,2020-11-03,False,0
+87ab099f-745a-4b7b-a488-e8158cbbda49,Contactgroep Frankrijk,CGF,Contactgroepen,Overig,,,True,11
+89edaeeb-6d77-4934-b8be-028bcb45d189,Werkgroep Financiële Verantwoordingen,WFV,,Overig,,,True,0
+dbcad3a9-5b1b-4d2f-8762-951c0abc0dda,Bouwbegeleidingscommissie,BBC,Dienst Commissieondersteuning Bestuur en Onderwijs,Overig,,,True,7
+e6291928-7ea0-46f9-aa6a-58b11ee069f2,Algemene commissie voor Buitenlandse Handel en Ontwikkelingssamenwerking,BuHaOS,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Overig,,2021-03-31,False,0
+f0c6dcd7-744f-4ed9-a0e0-e170eb61f7db,Commissie voor de Rijksuitgaven,RU,,Overig,2021-03-31,,True,31
+0ac066f2-84a6-45ea-91aa-b1b6957b8870,Presidium,PRES,Algemeen,Overig,,,True,7
+31864f66-fcf3-4316-b1e2-5e6ebadc7146,Tijdelijke commissie Grondrechten en Constitutionele toetsing,TCGCT,,Tijdelijk,2024-11-05,,True,10
+46dd3419-16ea-4bb4-8819-1ac3d3e25055,Contactgroep Duitsland,CGD,Contactgroepen,Overig,,,True,15
+7f943f49-7791-4d52-a307-9bc1efecf2ee,Gemengde commissie van Afstemming en Advies voor de griffie Internationale Betrekkingen,GCAAGIB,Interparlementaire betrekkingen,Overig,,2017-03-23,False,0
+807e03a0-df3f-49a1-9618-996f6fb7e24f,Vaste commissie voor Digitale Zaken,DiZa,Dienst Commissieondersteuning Bestuur en Onderwijs,Vast,2021-03-31,,True,33
+c58607ca-914d-4c14-b911-76ee39ca3dda,Vaste commissie voor Europese Zaken,EU,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,,,True,32
+db454dc4-07c7-439c-8c8c-4bcd40417388,Vaste commissie voor Binnenlandse Zaken en Koninkrijksrelaties,BZK,,Vast,,,True,0
+05f6f650-dc8d-4695-b131-57e7a842ecdd,Algemene commissie voor Integratiebeleid,INT,Dienst Commissieondersteuning Bestuur en Onderwijs,Overig,,,True,0
+0fb5100c-d9e8-4c59-b704-33b72e76029f,Vaste commissie voor Justitie,JUST,,Vast,,,True,0
+25210e6a-cec2-4f9d-ace5-5631902b9819,Tijdelijke commissie Aardgaswinning Groningen,TCAG,Overige Commissies,Tijdelijk,2020-09-17,2021-02-10,False,0
+34c8e95a-3949-41be-b825-e6b06d13bf2d,IPC GBVB/GVDB,IPC GBVB/GVDB,,Overig,,,True,0
+3bee1173-3218-4f55-895e-96a1d2d0533d,"Algemene commissie voor Wonen, Wijken en Integratie",WWI,,Overig,,,True,0
+4d1b62a5-07d1-43af-a14a-73db23a663ea,IPC Cosac,IPC Cosac,,Overig,,,True,0
+6d327969-274a-4d8c-ab30-57e717eb0fe9,Algemene commissie voor Jeugd en Gezin,JG,,Overig,,,True,0
+b07012bb-b0dd-48e8-8bfa-db748acd852c,Gezamenlijke toezichtsgroep Europol,JPSG,,Overig,2017-11-09,,True,0
+bc82d9e6-7ed3-45da-ad3a-bd3741460e9a,Parlementaire enquêtecommissie Fraudebeleid en Dienstverlening,PEFD,Overige Commissies,Tijdelijk,2022-02-01,2024-05-21,False,0
+c8fca908-279a-44e2-9f7a-0199e521c28f,"Vaste commissie voor Landbouw, Natuur en Voedselkwaliteit",LNV,,Vast,2017-11-09,2024-07-02,False,0
+cfe15993-ff5f-4f17-a313-b7ed897083f4,Gemengde commissie van beroep voor de Dienst Verslag en Redactie,GCBDVR,,Overig,,,True,0
+dabd05c8-f6e9-4d57-b1de-63bf614c65ad,Tijdelijke commissie Klimaatverandering,KLIMA,,Tijdelijk,,,True,0
+1e683e12-45f6-4068-8549-114741ecdb9b,Tijdelijke commissie Onderzoek Bouwfraude,TCOB,,Tijdelijk,,,True,0
+3aa37bc7-328b-449d-a4c7-89c677b51fab,Parlementaire ondervragingscommissie Kinderopvangtoeslag,POK,Overige Commissies,Overig,2020-07-02,2020-12-22,False,0
+7c22e26a-f6c8-4c0c-9dd6-bb281c4075fb,Bijzondere commissie van overleg van de Staten-Generaal,BCO,,Overig,,,True,0
+b83ee0f6-bb1f-40dc-858d-e54660fc43d8,Themacommissie Technologiebeleid,THTCH,Overige Commissies,Overig,,,True,0
+befe416e-ca1b-4804-97d0-7aca1dcba888,"Vaste commissie voor Volksgezondheid, Welzijn en Sport",VWS,Dienst Commissieondersteuning Sociaal en Financieel,Vast,,,True,35
+edf009b0-4541-40a5-b36e-fe936324ef3b,Gemengde commissie voor de Stenografische dienst der Staten-Generaal,STENO,,Overig,,,True,0
+192ff0db-c77c-4cd1-9100-3d05559a1fe6,Interparlementaire Unie (IPU),IPU,Interparlementaire betrekkingen,Interparlementair,,,True,0
+53359240-1bc2-4c15-9b8e-4c396d05db2a,Enquêtecommissie Bouwnijverheid,Bouw,,Tijdelijk,,,True,0
+63535cc8-a088-4b96-9d5e-28026e8b51bd,Parlementaire ondervragingscommissie ongewenste beïnvloeding uit onvrije landen,POCOB,Overige Commissies,Overig,2019-07-04,2021-02-03,False,0
+7cea615c-96f1-4f55-822f-2b038fe75b23,Parlementaire ondervragingscommissie Fiscale constructies,POFC,Dienst Commissieondersteuning Sociaal en Financieel,Overig,2016-11-30,2018-09-25,False,0
+86cce16c-39ef-46bd-8fbe-4db6a57f433e,"Algemene commissie voor Immigratie, Integratie en Asiel",IA,,Overig,,,True,0
+8c19138d-3975-4c72-a4a3-f854b38d77be,Tijdelijke commissie onderzoek financieel stelsel,TCOFS,,Tijdelijk,,,True,0
+8ceaa4f1-b4b9-4a15-8c41-c25edd63dbed,Vaste commissie voor Infrastructuur en Milieu,IM,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,,2017-11-09,False,0
+a0ceb8f9-5c8e-43c8-b591-584061753ab1,Vaste commissie voor Buitenlandse Handel en Ontwikkelingssamenwerking,BuHaOS,,Vast,2021-03-31,2024-07-02,False,0
+af1f56ee-1f1f-4bed-b0ab-31097ecdddef,Vaste commissie voor Koninkrijksrelaties,KR,Dienst Commissieondersteuning Bestuur en Onderwijs,Vast,,,True,32
+e0506b94-703c-4fff-990b-ef6108b20456,Parlementaire enquêtecommissie Corona,PEC,Overige Commissies,Tijdelijk,2024-01-30,,True,5
+02737d3d-44b6-4dbb-957b-512c3b5af763,Begeleidingscommissie Staatscommissie parlementair stelsel,BSPS,Overige Commissies,Overig,2017-11-08,2019-01-29,False,0
+0641b8e1-3418-4d99-bd26-bd8979ea08e7,Contactgroep Verenigd Koninkrijk,CGVK,Contactgroepen,Overig,,,True,11
+177eb895-6307-4268-94f6-a0f80dc3e358,Vaste commissie voor Binnenlandse Zaken,BIZA,Dienst Commissieondersteuning Bestuur en Onderwijs,Vast,,,True,33
+19163e6c-0bae-46a4-9c70-8cf14172a83c,Commissie voor de Rijksuitgaven,RU,,Overig,,2016-12-13,False,0
+540e568b-918f-4490-96c6-efae6beeb0e2,Tijdelijke commissie subsidiariteitstoets,TCS,,Tijdelijk,,,True,0
+63ca834f-1b2c-41a4-8eb7-b00955a948ba,Algemene commissie voor Wonen en Rijksdienst,WR,Dienst Commissieondersteuning Bestuur en Onderwijs,Overig,,2017-11-09,False,0
+68f310d2-ba08-466c-bbca-f21e5086dfd5,Gebruikers- en Adviesorgaan inzake Automatisering (GAA),GAA,,Overig,,,True,0
+d0e70aa4-f8d0-4ec7-9e28-71d70aeb17e9,Tijdelijke Commissie Lessen uit recente arbeidsmigratie,TCLURA,,Tijdelijk,,,True,0
+d2cd69c4-ba9d-4ddd-be57-5b9d2a349c23,Contactgroep Verenigde Staten,CGVS,Contactgroepen,Overig,,,True,23
+d38afba0-042f-4f3b-b0c8-b2df24eba6a7,Vaste commissie voor Financiën,FIN,Dienst Commissieondersteuning Sociaal en Financieel,Vast,,,True,33
+0904c47f-5426-4ff2-ab14-dbbf25d926f1,vaste commissie voor Onderwijs en Wetenschappen,O&W,,Vast,,,True,0
+13345aa1-9a85-428b-acaa-b4f474632b73,Werkgroep 5e Nota Ruimtelijke Ordening,WGRO,,Overig,,,True,0
+1b038b9b-0c58-4a56-a4fc-66f34614f793,Contactgroep België,CGB,Contactgroepen,Overig,,,True,15
+44c341a0-ae41-4f51-9c81-1f94d2fd1107,Vaste commissie voor Infrastructuur en Waterstaat,I&W,Dienst Commissieondersteuning Internationaal en Ruimtelijk,Vast,2017-11-09,,True,34
+590a4fb3-dde4-4b8d-b139-c93bd6e99060,Vaste commissie voor Nederlands-Antilliaanse en Arubaanse Zaken,NAAZ,,Vast,,,True,0
+6c4e8ed8-a35f-4ca6-85dc-f33746706e96,Tijdelijke commissie Onderzoek Stichting Woningbeheer Limburg,WBL,,Tijdelijk,,,True,0
+aecfb300-4d7a-41b5-a949-59ec1cd34ddf,"Vaste commissie voor Welzijn, Volksgezondheid en Cultuur",WVC,,Vast,,,True,0
+c2e8209f-7f4e-4490-bfad-e19ea14e5a2e,Themacommissie Ouderenbeleid,THOUD,,Overig,,,True,0
+dd5204c5-6977-4235-bc0b-040aa15e0571,Parlementaire enquêtecommissie financieel stelsel,PEFS,,Tijdelijk,,,True,0
+dd5994e0-6caf-4607-99b4-0396742c0e9b,Tijdelijke commissie Fraudebeleid en Dienstverlening,TCFD,Dienst Commissieondersteuning Sociaal en Financieel,Tijdelijk,2021-06-29,2022-01-27,False,0
+05db7aeb-fe77-4964-b8f1-5a438672c48c,Europese Veiligheids- en Defensie Assemblee (voorheen WEU),EVDA,Interparlementaire betrekkingen,Overig,,2011-06-30,False,0
+29cb4c76-e068-41c3-8335-e9cfc15c3882,Parlementaire Assemblee van de Unie voor de Mediterrane Regio,PAUfM,Interparlementaire betrekkingen,Overig,,,True,2
+5830dae2-872c-48ac-b1ce-c8938b7aa84a,Tijdelijke commissie Besluitvorming uitzendingen,TCUIT,,Tijdelijk,,,True,0
+8d2d96dc-6adb-472c-a374-233c73341a0d,Tijdelijke gemengde commissie subsidiariteitstoets,TCSUB,,Tijdelijk,,,True,0
+d2462ecd-7746-40f1-ae65-4b4dd0ef9887,Tijdelijke commissie Opsporingsmethoden,TCOPS,,Tijdelijk,,,True,0
+e7273a34-61cf-46a5-8100-75ebc06f7457,Tijdelijke commissie Parlementair onderzoek Onderhoud en innovatie spoor,TCSPOOR,,Tijdelijk,,,True,0
+f72caf23-f2df-4adc-8a75-128446754bd1,Tijdelijke commissie Uitvoeringsorganisaties,TCU,Overige Commissies,Tijdelijk,2020-02-20,2022-05-12,False,0
+fd563415-af0c-4833-8870-e7ef2097b981,Kunstcommissie,KUNST,Overige Commissies,Overig,2018-03-15,,True,6
